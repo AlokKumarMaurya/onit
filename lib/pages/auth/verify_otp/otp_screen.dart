@@ -55,11 +55,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
     var userDataResponse = await RegistrationRepo()
         .verifyOtp(username: widget.username, otp: _otp.text);
     if (userDataResponse != null) {
+      print(userDataResponse);
       setState(() {
         verifyOtp_model = userDataResponse;
         if (verifyOtp_model?.status == 1) {
-          // AppNav.toNamed(AppRoutes.homepage);
-          Navigator.push(context,MaterialPageRoute(builder: (context)=>ResetPasswordScreen()));
+          AppNav.toNamed(AppRoutes.homepage);
+          print("111111111111111111111"); //Navigator.push(context,MaterialPageRoute(builder: (context)=>ResetPasswordScreen()));
+         print(verifyOtp_model);
           _otp.clear();
         } else {
           Fluttertoast.showToast(msg: verifyOtp_model!.message);

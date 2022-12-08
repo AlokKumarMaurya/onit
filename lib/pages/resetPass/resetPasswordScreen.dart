@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:get/get.dart';
+import 'package:onit/pages/auth/login/login_screen.dart';
 import '../../component/text_form_field.dart';
+import '../../data_layer/repository/login_repository.dart';
+import '../../model/password_reset_reset.dart';
 import '../../utilities/app_nav.dart';
 import '../../utilities/app_routes.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
-
+  const ResetPasswordScreen({Key? key,required this.profileHash}) : super(key: key);
+final String profileHash;
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
@@ -87,9 +90,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                         if(_password.text.isNotEmpty){
                           print("Button pressed");
-                         // forgetPassword();
+                        forgetPassword(_password.text,widget.profileHash);
                         }else{
-                          Fluttertoast.showToast(msg: "Enter new password");
+                          Fluttertoast.showToast(msg: "Enter new password first");
                         }
 
 
@@ -150,5 +153,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         ),
       ),
     );
+  }
+
+  void forgetPassword(String pass ,String profileHas) async{
+    Get.defaultDialog(
+      title: "",
+      content: CircularProgressIndicator()
+    );
+    var response=await LoginRepository().ResetPassword(pass,profileHas);
+    if(response!=null){
+      PasswordResetResponse modal=response;
+      print(modal.data);
+      print(modal.message);
+      Fluttertoast.showToast(msg: modal.message);
+      Get.back();
+      Get.offAll(LoginScreen());
+    }
   }
 }

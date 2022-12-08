@@ -51,9 +51,22 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
     // print(("data is decoded");
 
   }*/
+
+
+  testfn()async{
+    String profileHash = AppPreference().profileHash;
+    // final
+  }
+
     Future uploadDocument() async {
     String profileHash = AppPreference().profileHash;
-    print("prfil"+profileHash);
+
+
+    testfn();
+
+    if(file==null || file!.path.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Chosse file first")));
+    }
    final formData = FormData.fromMap({
       'profile_hash': profileHash,
       'doc_type': "1",
@@ -66,8 +79,6 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
     //   OnitUrl.uploadDoucment,
     //   data: formData,
     // );
-
-
     var test=http.MultipartRequest(
       "POST",Uri.parse(OnitUrl.uploadDoucment)
     );

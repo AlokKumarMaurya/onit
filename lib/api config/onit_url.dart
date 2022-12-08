@@ -12,4 +12,5 @@ class OnitUrl{
   static const verifyOtp = '$baseUrl/api/verify-otp.php';
   static const uploadDoucment = '$baseUrl/api/upload-user-file.php';
   static const forgetPassword = '$baseUrl/api/forgot-password.php';
+  static const resetPassword="${baseUrl}/api/change-password.php";
 }

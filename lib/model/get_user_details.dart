@@ -50,20 +50,20 @@ class UserDatum {
   required  this.updatedAt,
   });
 
-  String userId;
-  String name;
-  String fatherName;
-  String motherName;
-  String permanentAddress;
-  String currentAddress;
-  String status;
-  String email;
-  String phone;
-  String password;
-  String token;
-  String profileHash;
-  String createdAt;
-  String updatedAt;
+  String? userId;
+  String? name;
+  String? fatherName;
+  String? motherName;
+  String? permanentAddress;
+  String? currentAddress;
+  String? status;
+  String? email;
+  String? phone;
+  String? password;
+  String? token;
+  String? profileHash;
+  String? createdAt;
+  String? updatedAt;
 
   factory UserDatum.fromJson(Map<String, dynamic> json) => UserDatum(
     userId: json["user_id"],

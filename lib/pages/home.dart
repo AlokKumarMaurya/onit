@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:onit/data_layer/repository/homePageRepository.dart';
 import 'package:onit/pages/Upload%20Doc/upload_doc_screen.dart';
 import 'package:onit/pages/orders/orders_Screen.dart';
@@ -96,11 +97,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  AppNav.toNamed(AppRoutes.loginPage);
-                  AppPreference().saveLogin(false);
-                  AppPreference().saveRazorPayKey("");
-                  
-                  AppPreference().saveProfileHash("");
+logoutAlertBox();
+
                 },
                 icon: const Icon(
                   Icons.logout_outlined,
@@ -152,5 +150,27 @@ class _HomePageState extends ConsumerState<HomePage> {
     } else {
       return const OrderScreen();
     }
+  }
+
+  void logoutAlertBox() {
+
+    Get.defaultDialog(
+      title: "Logout",
+      middleText: "Are you sure that you want to logout",
+      textCancel: "Cancel",
+      textConfirm: "Logout",
+      onCancel: () {
+        print("cancledd clicked");
+        Navigator.pop(context);
+      },
+      onConfirm: (){
+      print("confirm clicked");
+        AppNav.toNamed(AppRoutes.loginPage);
+        AppPreference().saveLogin(false);
+        AppPreference().saveRazorPayKey("");
+
+        AppPreference().saveProfileHash("");
+    }
+    );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:onit/api%20config/api_client.dart';
 
 import '../../component/shimmer.dart';
 import '../../component/text_form_field.dart';
@@ -30,7 +32,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
   GetUserDetailsModel? get_user_data_model;
 
   List<UserDatum> userData = [];
-
+bool isloading=false;
   getUserData() async {
     var userDataResponse = await HomeRepository().getUserDetails();
     if (userDataResponse != null) {
@@ -38,14 +40,14 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
         get_user_data_model = userDataResponse;
         if (get_user_data_model?.status == 1) {
           userData = get_user_data_model?.userData ?? [];
-          if(userData.length!=0){
-            _email.text = userData[0].email;
-            _name.text = userData[0].name;
-            _phone.text = userData[0].phone;
-            _fatherName.text = userData[0].fatherName;
-            _motherName.text = userData[0].motherName;
-            _permanentAddress.text = userData[0].permanentAddress;
-            _currentAddress.text = userData[0].currentAddress;
+          if(userData!.length!=0){
+            _email.text = userData[0].email.toString();
+            _name.text = userData[0].name.toString();
+            _phone.text = userData[0].phone.toString();
+            _fatherName.text = userData[0].fatherName.toString();
+            _motherName.text = userData[0].motherName.toString();
+            _permanentAddress.text = userData[0].permanentAddress.toString();
+            _currentAddress.text = userData[0].currentAddress.toString();
           }else{
 
             _email.text = "";
@@ -237,7 +239,7 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
                         //////// HERE
                       ),
                       onPressed: () {
-                        AppNav.toNamed(AppRoutes.homepage);
+                        update();
                       },
                       child: Text("Update")),
                 ),
@@ -250,5 +252,17 @@ class _UpdateProfileScreenState extends ConsumerState<UpdateProfileScreen> {
         ),
       ),
     );
+  }
+
+  void update() async{
+    Get.defaultDialog(
+      barrierDismissible: false,
+      title: "",
+      content: CircularProgressIndicator()
+    );
+   var res=await ApiClient().UpdateUserProfile(_name.text,_email.text,_phone.text);
+   if(res !=null){
+     Get.back();
+   }
   }
 }
