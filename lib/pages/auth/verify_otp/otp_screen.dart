@@ -59,7 +59,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
       setState(() {
         verifyOtp_model = userDataResponse;
         if (verifyOtp_model?.status == 1) {
-          AppNav.toNamed(AppRoutes.homepage);
+          AppNav.toNamed(AppRoutes.loginPage);
           print("111111111111111111111"); //Navigator.push(context,MaterialPageRoute(builder: (context)=>ResetPasswordScreen()));
          print(verifyOtp_model);
           _otp.clear();

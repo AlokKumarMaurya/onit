@@ -142,6 +142,7 @@ bool isloading=false;
                             height: 10,
                           ),
                           textFormField(
+                            readonly: true,
                             cotroller: _phone,
                             hintText: _phone.text!= ""
                                 ? "${userData[0].phone}":"Phone",
@@ -158,6 +159,7 @@ bool isloading=false;
                             height: 10,
                           ),
                           textFormField(
+                            readonly: true,
                             cotroller: _fatherName,
                             hintText: _fatherName.text!= ""
                                 ? "${userData[0].fatherName}":"Father Name",
@@ -174,6 +176,7 @@ bool isloading=false;
                             height: 10,
                           ),
                           textFormField(
+                            readonly: true,
                             cotroller: _motherName,
                             hintText: _motherName.text!= ""
                                 ? "${userData[0].motherName}":"Mother Name",
@@ -190,6 +193,7 @@ bool isloading=false;
                             height: 10,
                           ),
                           textFormField(
+                            readonly: true,
                             cotroller: _permanentAddress,
                             hintText: _permanentAddress.text!= ""
                                 ? "${userData[0].permanentAddress}":"Permanent Address",
@@ -209,6 +213,7 @@ bool isloading=false;
                             height: 10,
                           ),
                           textFormField(
+                            readonly: true,
                             cotroller: _currentAddress,
                             hintText: _currentAddress.text!= ""
                                 ? "${userData[0].currentAddress}":"Current Address",
@@ -260,7 +265,7 @@ bool isloading=false;
       title: "",
       content: CircularProgressIndicator()
     );
-   var res=await ApiClient().UpdateUserProfile(_name.text,_email.text,_phone.text);
+   var res=await ApiClient().UpdateUserProfile(_name.text.removeAllWhitespace,_email.text.removeAllWhitespace,_phone.text.removeAllWhitespace);
    if(res !=null){
      Get.back();
    }

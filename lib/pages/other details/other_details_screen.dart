@@ -36,7 +36,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
     //If any form validation function returns false means all forms are not valid
     contactForms.forEach((element){
-      if(element._addressController.text.isEmpty || element._contactController.text.isEmpty ||element._nameController.text.isEmpty || element._emailController.text.isEmpty){
+      if(element._nameController.text.isEmpty ){
         allValid=false;
       }
     });
@@ -52,30 +52,30 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form submited succeffully"),duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
-      SingleChildScrollView(
-        child: Container(
-          height: 150,
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: contactForms.length,itemBuilder: (_,index){
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: Container(
-                  child: Text("${contactForms[index]._emailController.text} \n ${contactForms[index]._nameController}"),
-                ),
-              ),
-            );
-          },),
-        ),
-      ),
-
-        duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
+      // SingleChildScrollView(
+      //   child: Container(
+      //     height: 150,
+      //     child: ListView.builder(
+      //       physics: NeverScrollableScrollPhysics(),
+      //       shrinkWrap: true,
+      //       itemCount: contactForms.length,itemBuilder: (_,index){
+      //       return Padding(
+      //         padding: const EdgeInsets.all(8.0),
+      //         child: Card(
+      //           child: Container(
+      //             child: Text("${contactForms[index]._nameController.text}"),
+      //           ),
+      //         ),
+      //       );
+      //     },),
+      //   ),
+      // ),
+      //
+      //   duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
 
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("All Fields are required"),duration: Duration(seconds: 2),));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form updated"),duration: Duration(seconds: 2),));
       debugPrint("Form is Not Valid");
     }
   }
@@ -97,11 +97,13 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
   }
 
   //Add New Form
-  onAdd() {
+  onAdd(String title,String initialValue) {
     setState(() {
       ContactModel _contactModel =
       ContactModel(name: "", email: "", number: "", address: "",id: contactForms.length);
       contactForms.add(ContactFormItemWidget(
+        initialText: initialValue,
+        title: title,
         index: contactForms.length,
         contactModel: _contactModel,
         onRemove: () => onRemove(_contactModel),
@@ -129,8 +131,12 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
       });
 
 
-      userOtherData.forEach((element) {onAdd();});
-
+      // userOtherData.forEach((element) {onAdd(userOtherData);});
+if(userOtherData!=null){
+  for(int i=0;i<userOtherData.length;i++){
+    onAdd(userOtherData[i].title,userOtherData[i].value??" ");
+  }
+}
 
     } else {}
   }
@@ -159,115 +165,134 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
             const SizedBox(
               height: 20,
             ),
-            get_user_other_data_model != null
-                ? userOtherData.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: userOtherData.length,
-                        itemBuilder: (context, index) {
-                          var otherData = userOtherData[index];
-                          return Card(
-                              elevation: 10,
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 25),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        "${otherData.title}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                                width: 0.5,
-                                                color: Colors.grey)),
-                                        child: Text("${otherData.value}"),
-                                      )
-                                    ],
-                                  ) /*Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Alternate Number"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(cotroller: _alterateContactNumber,hintText: "Alternate Number",
-                      prefixIcon:Container()
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const  Text("Gender"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(cotroller: _gender,hintText: "Gender",
-                      prefixIcon:Container()
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text("Nationality"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(cotroller: _nationality,hintText: "Nationality",
-                      prefixIcon:Container()
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+            // get_user_other_data_model != null
+            //     ? userOtherData.isNotEmpty
+            //         ? ListView.builder(
+            //             shrinkWrap: true,
+            //             physics: NeverScrollableScrollPhysics(),
+            //             itemCount: userOtherData.length,
+            //             itemBuilder: (context, index) {
+            //               var otherData = userOtherData[index];
+            //               return Card(
+            //                   elevation: 10,
+            //                   child: Padding(
+            //                       padding: const EdgeInsets.symmetric(
+            //                           horizontal: 8.0, vertical: 25),
+            //                       child: Column(
+            //                         crossAxisAlignment:
+            //                             CrossAxisAlignment.stretch,
+            //                         children: [
+            //                           Text(
+            //                             "${otherData.title}",
+            //                             style: TextStyle(
+            //                                 fontWeight: FontWeight.bold),
+            //                           ),
+            //                           const SizedBox(
+            //                             height: 10,
+            //                           ),
+            //                           Container(
+            //                             padding: EdgeInsets.all(10),
+            //                             decoration: BoxDecoration(
+            //                                 borderRadius:
+            //                                     BorderRadius.circular(5),
+            //                                 border: Border.all(
+            //                                     width: 0.5,
+            //                                     color: Colors.grey)),
+            //                             child: Text("${otherData.value}"),
+            //                           )
+            //                         ],
+            //                       )
+            //                     /*Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         const Text("Alternate Number"),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         textFormField(cotroller: _alterateContactNumber,hintText: "Alternate Number",
+            //           prefixIcon:Container()
+            //         ),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         const  Text("Gender"),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         textFormField(cotroller: _gender,hintText: "Gender",
+            //           prefixIcon:Container()
+            //         ),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         const Text("Nationality"),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         textFormField(cotroller: _nationality,hintText: "Nationality",
+            //           prefixIcon:Container()
+            //         ),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //
+            //
+            //
+            //
+            //
+            //
+            //         const Text("Qualification"),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         textFormField(cotroller: _qualification,hintText: "Qualification",
+            //           prefixIcon:Container()
+            //         ),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         const Text("Text Field Text"),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         textFormField(cotroller: _textFieldText,hintText: "Text Field Text",
+            //           prefixIcon: Container()
+            //         ),
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+            //       ],
+            //     ),*/
+            //                       ));
+            //             },
+            //           )
+            //         : const Center(
+            //             heightFactor: 10, child: Text("No Data Found"))
+            //     : const ShimmerWidget(),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+
+           contactForms!=null? contactForms.isNotEmpty
+                ? Container(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: contactForms.length,
+                      itemBuilder: (_, index) {
+                        return contactForms[index];
+                      }),
+                ):const ShimmerWidget():Container(),
 
 
 
 
-
-
-                    const Text("Qualification"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(cotroller: _qualification,hintText: "Qualification",
-                      prefixIcon:Container()
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text("Text Field Text"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    textFormField(cotroller: _textFieldText,hintText: "Text Field Text",
-                      prefixIcon: Container()
-                    ),
-
-
-
-
-
-
-
-
-
-                  ],
-                ),*/
-                                  ));
-                        },
-                      )
-                    : const Center(
-                        heightFactor: 10, child: Text("No Data Found"))
-                : const ShimmerWidget(),
             const SizedBox(
               height: 10,
             ),
@@ -282,7 +307,8 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
                         //////// HERE
                       ),
                       onPressed: () {
-                        AppNav.toNamed(AppRoutes.homepage);
+                        onSave();
+                        // AppNav.toNamed(AppRoutes.homepage);
                       },
                       child: const Text("Update")),
                 ),
@@ -294,18 +320,6 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
 
 
-            contactForms.isNotEmpty
-                ? SingleChildScrollView(
-              child: Container(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: contactForms.length,
-                    itemBuilder: (_, index) {
-                      return contactForms[index];
-                    }),
-              ),
-            ):Container()
 
 
           ],
@@ -324,23 +338,26 @@ class ContactFormItemWidget extends StatefulWidget {
       {Key? key,
         required this.contactModel,
         required this.onRemove,
-        this.index})
+        this.index,
+      required this.title,
+      required this.initialText})
       : super(key: key);
 
   final index;
   ContactModel contactModel;
   final Function onRemove;
   final state = _ContactFormItemWidgetState();
-
+final title;
+final initialText;
   @override
   State<StatefulWidget> createState() {
     return state;
   }
 
   TextEditingController _nameController = TextEditingController();
-  TextEditingController _contactController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
+  // TextEditingController _contactController = TextEditingController();
+  // TextEditingController _emailController = TextEditingController();
+  // TextEditingController _addressController = TextEditingController();
 
 }
 
@@ -350,125 +367,224 @@ class _ContactFormItemWidgetState extends State<ContactFormItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Form(
-          key: formKey,
-          child: Container(
-            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 10,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Form(
+        key: formKey,
+        child: Card(
+            elevation: 10,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0, vertical: 25),
+                child: Column(
+                  crossAxisAlignment:
+                  CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Contact - ${widget.index}",
+                      "${widget.title}",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.orange),
+                          fontWeight: FontWeight.bold),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              setState(() {
-                                //Clear All forms Data
-                                widget.contactModel.name = "";
-                                widget.contactModel.number = "";
-                                widget.contactModel.email = "";
-                                widget._nameController.clear();
-                                widget._contactController.clear();
-                                widget._emailController.clear();
-                              });
-                            },
-                            child: Text(
-                              "Clear",
-                              style: TextStyle(color: Colors.blue),
-                            )),
-                        TextButton(
-                            onPressed: () => widget.onRemove(),
-                            child: Text(
-                              "Remove",
-                              style: TextStyle(color: Colors.blue),
-                            )),
-                      ],
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ],
-                ),
-                TextFormField(
-                  controller: widget._nameController,
-                  // initialValue: widget.contactModel.name,
-                  onChanged: (value) => widget.contactModel.name = value,
-                  onSaved: (value) =>
-                  widget.contactModel.name = value.toString(),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                    border: OutlineInputBorder(),
-                    hintText: "Enter Name",
-                    labelText: "Name",
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  controller: widget._contactController,
-                  onChanged: (value) => widget.contactModel.number = value,
-                  onSaved: (value) =>
-                  widget.contactModel.name = value.toString(),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                    border: OutlineInputBorder(),
-                    hintText: "Enter Number",
-                    labelText: "Number",
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  controller: widget._emailController,
-                  onChanged: (value) => widget.contactModel.email = value,
-                  onSaved: (value) =>
-                  widget.contactModel.email = value.toString(),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                    border: OutlineInputBorder(),
-                    hintText: "Enter Email",
-                    labelText: "Email",
-                  ),
-                ),
-                SizedBox(height: 8,),
-                TextFormField(
-                    onChanged: (value)=>widget.contactModel.address=value,
-                    onSaved: (value)=>widget.contactModel.address.toString(),
-                    controller: widget._addressController,
-                    decoration: InputDecoration(
-                        hintText: "Addrress",
-                        labelText: "Address"
+                    TextFormField(
+                      controller: widget._nameController,
+                      // initialValue: widget.contactModel.name,
+                      onChanged: (value) => widget.contactModel.name = value,
+                      onSaved: (value) =>
+                      widget.contactModel.name = value.toString(),
+                      // initialValue: "${widget.initialText}",
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        border: OutlineInputBorder(),
+                        hintText: "${widget.initialText}",
+                        // labelText: "${widget.initialText}",
+                      ),
                     )
-
+                  ],
                 )
-              ],
-            ),
-          ),
-        ),
+              /*Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Alternate Number"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textFormField(cotroller: _alterateContactNumber,hintText: "Alternate Number",
+                    prefixIcon:Container()
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const  Text("Gender"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textFormField(cotroller: _gender,hintText: "Gender",
+                    prefixIcon:Container()
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Nationality"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textFormField(cotroller: _nationality,hintText: "Nationality",
+                    prefixIcon:Container()
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+
+
+
+
+
+                  const Text("Qualification"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textFormField(cotroller: _qualification,hintText: "Qualification",
+                    prefixIcon:Container()
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text("Text Field Text"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textFormField(cotroller: _textFieldText,hintText: "Text Field Text",
+                    prefixIcon: Container()
+                  ),
+
+
+
+
+
+
+
+
+
+                ],
+              ),*/
+            ))
+        // Container(
+        //   padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+        //   decoration: BoxDecoration(
+        //     color: Colors.white,
+        //     border: Border.all(color: Colors.black54),
+        //     borderRadius: BorderRadius.all(Radius.circular(12)),
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: Colors.grey.withOpacity(0.2),
+        //         spreadRadius: 2,
+        //         blurRadius: 10,
+        //         offset: Offset(0, 3), // changes position of shadow
+        //       ),
+        //     ],
+        //   ),
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Row(
+        //         mainAxisSize: MainAxisSize.max,
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           Text(
+        //             "${widget.index}",
+        //             style: TextStyle(
+        //                 fontWeight: FontWeight.bold,
+        //                 fontSize: 16,
+        //                 color: Colors.orange),
+        //           ),
+        //           Row(
+        //             mainAxisSize: MainAxisSize.min,
+        //             children: [
+        //               TextButton(
+        //                   onPressed: () {
+        //                     setState(() {
+        //                       //Clear All forms Data
+        //                       widget.contactModel.name = "";
+        //                       widget.contactModel.number = "";
+        //                       widget.contactModel.email = "";
+        //                       widget._nameController.clear();
+        //                       widget._contactController.clear();
+        //                       widget._emailController.clear();
+        //                     });
+        //                   },
+        //                   child: Text(
+        //                     "Clear",
+        //                     style: TextStyle(color: Colors.blue),
+        //                   )),
+        //               TextButton(
+        //                   onPressed: () => widget.onRemove(),
+        //                   child: Text(
+        //                     "Remove",
+        //                     style: TextStyle(color: Colors.blue),
+        //                   )),
+        //             ],
+        //           ),
+        //         ],
+        //       ),
+        //       TextFormField(
+        //         controller: widget._nameController,
+        //         // initialValue: widget.contactModel.name,
+        //         onChanged: (value) => widget.contactModel.name = value,
+        //         onSaved: (value) =>
+        //         widget.contactModel.name = value.toString(),
+        //         decoration: InputDecoration(
+        //           contentPadding: EdgeInsets.symmetric(horizontal: 12),
+        //           border: OutlineInputBorder(),
+        //           hintText: "Enter Name",
+        //           labelText: "Name",
+        //         ),
+        //       ),
+        //       // SizedBox(
+        //       //   height: 8,
+        //       // ),
+        //       // TextFormField(
+        //       //   controller: widget._contactController,
+        //       //   onChanged: (value) => widget.contactModel.number = value,
+        //       //   onSaved: (value) =>
+        //       //   widget.contactModel.name = value.toString(),
+        //       //   decoration: InputDecoration(
+        //       //     contentPadding: EdgeInsets.symmetric(horizontal: 12),
+        //       //     border: OutlineInputBorder(),
+        //       //     hintText: "Enter Number",
+        //       //     labelText: "Number",
+        //       //   ),
+        //       // ),
+        //       // SizedBox(
+        //       //   height: 8,
+        //       // ),
+        //       // TextFormField(
+        //       //   controller: widget._emailController,
+        //       //   onChanged: (value) => widget.contactModel.email = value,
+        //       //   onSaved: (value) =>
+        //       //   widget.contactModel.email = value.toString(),
+        //       //   decoration: InputDecoration(
+        //       //     contentPadding: EdgeInsets.symmetric(horizontal: 12),
+        //       //     border: OutlineInputBorder(),
+        //       //     hintText: "Enter Email",
+        //       //     labelText: "Email",
+        //       //   ),
+        //       // ),
+        //       // SizedBox(height: 8,),
+        //       // TextFormField(
+        //       //     onChanged: (value)=>widget.contactModel.address=value,
+        //       //     onSaved: (value)=>widget.contactModel.address.toString(),
+        //       //     controller: widget._addressController,
+        //       //     decoration: InputDecoration(
+        //       //         hintText: "Addrress",
+        //       //         labelText: "Address"
+        //       //     )
+        //       //
+        //       // )
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }

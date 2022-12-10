@@ -6,8 +6,10 @@ class textFormField extends StatelessWidget {
   final String hintText;
   final Widget prefixIcon;
   final bool? obsecure;
+  final bool? readonly;
 
   const textFormField({
+    this.readonly,
     required this.cotroller,
     required this.hintText,
     this.obsecure,
@@ -19,6 +21,7 @@ class textFormField extends StatelessWidget {
     return Container(
       height: 50,
       child: TextFormField(
+        readOnly: this.readonly??false,
         controller: cotroller,
         obscureText: obsecure != null ? obsecure! : false,
         decoration: InputDecoration(

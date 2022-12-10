@@ -156,21 +156,75 @@ logoutAlertBox();
 
     Get.defaultDialog(
       title: "Logout",
-      middleText: "Are you sure that you want to logout",
+      titleStyle:  TextStyle(
+          fontSize: 22,color: Colors.black87,
+          fontWeight: FontWeight.w500
+      ),
+      middleText: "Are you sure that you want to logout from Onit ",
       textCancel: "Cancel",
       textConfirm: "Logout",
+      middleTextStyle: TextStyle(
+        fontSize: 18,color: Colors.black87,
+        fontWeight: FontWeight.w400
+      ),
+
+      cancel: InkWell(
+        onTap: ()=>Navigator.pop(context),
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          child: Text("Cancel",style:  TextStyle(
+              fontSize: 20,color: Colors.black87,
+              fontWeight: FontWeight.w500
+          ),),width: MediaQuery.of(context).size.width/3.5,),
+      ),
+      confirm: InkWell(
+        onTap: (){
+          AppNav.offAllToNamed(AppRoutes.loginPage);
+          AppPreference().saveLogin(false);
+          AppPreference().saveRazorPayKey("");
+
+          AppPreference().saveProfileHash("");
+        },
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          child: Text("Logout",style:  TextStyle(
+              fontSize: 20,color: Colors.black87,
+              fontWeight: FontWeight.w500
+          ),),width: MediaQuery.of(context).size.width/3.5,),
+      ) ,
       onCancel: () {
         print("cancledd clicked");
         Navigator.pop(context);
       },
       onConfirm: (){
       print("confirm clicked");
-        AppNav.toNamed(AppRoutes.loginPage);
+        AppNav.offAllToNamed(AppRoutes.loginPage);
         AppPreference().saveLogin(false);
         AppPreference().saveRazorPayKey("");
 
         AppPreference().saveProfileHash("");
     }
     );
+    // Get.dialog(
+    //   Container(
+    //     height: 200,
+    //     color: Colors.white24,
+    //     child: Column(
+    //       children: [
+    //         Text("Logout"),
+    //         SizedBox(height: 15,),
+    //         Text("Are you sure that you want to logout"),
+    //         SizedBox(height: 10,),
+    //         Row(
+    //           children: [
+    //             TextButton(onPressed: (){Navigator.pop(context);}, child: Text("Cancel"))
+    //           ],
+    //         )
+    //       ],
+    //     ),
+    //   )
+    // );
   }
 }
