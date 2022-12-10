@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:onit/api%20config/api_client.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../component/shimmer.dart';
@@ -31,9 +33,8 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
 
 
-  onSave() {
+  onSave() async {
     bool allValid = true;
-
     //If any form validation function returns false means all forms are not valid
     contactForms.forEach((element){
       if(element._nameController.text.isEmpty ){
@@ -41,43 +42,80 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
       }
     });
 
-    if (allValid) {
-      for (int i = 0; i < contactForms.length; i++) {
-        ContactFormItemWidget item = contactForms[i];
-        debugPrint("Name: ${item.contactModel.name}");
-        debugPrint("Number: ${item.contactModel.number}");
-        debugPrint("Email: ${item.contactModel.email}");
-      }
-      //Submit Form Here
+if(contactForms!=null){
+  Get.dialog(
+    barrierDismissible: false,
+    Container(
+      color: Colors.transparent,
+      height: 200,
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    )
+  );
+  for (int i = 0; i < contactForms.length; i++) {
+    ContactFormItemWidget item = contactForms[i];
+// debugPrint("000000000000000000000");
+// debugPrint((item.contactModel.name !=null && item.contactModel.name.isNotEmpty && item.contactModel.name!="").toString());
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form submited succeffully"),duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
-
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
-      // SingleChildScrollView(
-      //   child: Container(
-      //     height: 150,
-      //     child: ListView.builder(
-      //       physics: NeverScrollableScrollPhysics(),
-      //       shrinkWrap: true,
-      //       itemCount: contactForms.length,itemBuilder: (_,index){
-      //       return Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: Card(
-      //           child: Container(
-      //             child: Text("${contactForms[index]._nameController.text}"),
-      //           ),
-      //         ),
-      //       );
-      //     },),
-      //   ),
-      // ),
-      //
-      //   duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
-
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form updated"),duration: Duration(seconds: 2),));
-      debugPrint("Form is Not Valid");
+    if(item.contactModel.name !=null && item.contactModel.name.isNotEmpty && item.contactModel.name!=""){
+      valueData[i]=item.contactModel.name;
     }
+    // debugPrint(item.contactModel.name.toString());
+    // debugPrint("Number: ${item.contactModel.number}");
+    // debugPrint("Email: ${item.contactModel.email}");
+  }
+
+ var res=await ApiClient().UpdateUserOtherDetails(valueData,keyData);
+  if(res!=null){
+    Get.back();
+  }
+    }else{
+  Fluttertoast.showToast(msg: "No data found");
+}
+
+
+
+
+
+
+    // if (allValid) {
+    //   for (int i = 0; i < contactForms.length; i++) {
+    //     ContactFormItemWidget item = contactForms[i];
+    //     debugPrint("Name: ${item.contactModel.name}");
+    //     debugPrint("Number: ${item.contactModel.number}");
+    //     debugPrint("Email: ${item.contactModel.email}");
+    //   }
+    //   //Submit Form Here
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form submited succeffully"),duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
+    //
+    //   // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
+    //   // SingleChildScrollView(
+    //   //   child: Container(
+    //   //     height: 150,
+    //   //     child: ListView.builder(
+    //   //       physics: NeverScrollableScrollPhysics(),
+    //   //       shrinkWrap: true,
+    //   //       itemCount: contactForms.length,itemBuilder: (_,index){
+    //   //       return Padding(
+    //   //         padding: const EdgeInsets.all(8.0),
+    //   //         child: Card(
+    //   //           child: Container(
+    //   //             child: Text("${contactForms[index]._nameController.text}"),
+    //   //           ),
+    //   //         ),
+    //   //       );
+    //   //     },),
+    //   //   ),
+    //   // ),
+    //   //
+    //   //   duration: Duration(seconds: 2),backgroundColor: Colors.green,),);
+    //
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Form updated"),duration: Duration(seconds: 2),));
+    //   debugPrint("Form is Not Valid");
+    // }
   }
 
   //Delete specific form
@@ -115,8 +153,8 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
 
   List<ContactFormItemWidget> contactForms = List.empty(growable: true);
-
-
+List keyData=List.empty(growable: true);
+List valueData=List.empty(growable: true);
 
   getUserOtherData() async {
     var userOtherDataResponse = await HomeRepository().getUserOtherDetails();
@@ -135,6 +173,8 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 if(userOtherData!=null){
   for(int i=0;i<userOtherData.length;i++){
     onAdd(userOtherData[i].title,userOtherData[i].value??" ");
+    keyData.add(userOtherData[i].typeId);
+    valueData.add(userOtherData[i].value);
   }
 }
 

@@ -13,4 +13,5 @@ class OnitUrl{
   static const uploadDoucment = '$baseUrl/api/upload-user-file.php';
   static const forgetPassword = '$baseUrl/api/forgot-password.php';
   static const resetPassword="${baseUrl}/api/change-password.php";
+  static const updateOtherDetails="${baseUrl}/api/update-user-other.php";
 }
