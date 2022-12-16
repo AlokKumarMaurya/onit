@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -64,4 +65,45 @@ debugPrint(dataValue);
 
 
 
+
+
+  uploadDocNew(File? file)async{
+    Get.dialog(
+      Center(
+        child: CircularProgressIndicator(),
+      )
+    );
+    String profileHash = AppPreference().profileHash;
+    if(file==null || file!.path.isEmpty){
+    Get.showSnackbar(GetSnackBar(messageText:  Text("Chosse file first",style: TextStyle(
+      color: Colors.white
+    ),),
+      backgroundColor: Colors.red,
+      duration: Duration(
+      seconds: 2
+    ),));
+    }else{
+      final postBody = FormData({
+        "profile_hash":"9b70e88c6217fd2b88edcf2cbd0894146",
+        "doc_type":1,
+        "file":await  MultipartFile(file, filename: file.path.split("/").last.toString()),
+      });
+
+      try{
+       var response=await post("https://onitonline.in/api/upload-user-file.php", postBody);
+       debugPrint(response.statusCode.toString());
+       debugPrint(response.body.toString());
+       debugPrint("response.statusCode.toString()");
+      }catch(e){
+        Get.showSnackbar(GetSnackBar(messageText:  Text(e.toString(),style: TextStyle(
+            color: Colors.white
+        ),),
+          backgroundColor: Colors.red,
+          duration: Duration(
+              seconds: 2
+          ),));
+      }
+Get.back();
+    }
+  }
 }

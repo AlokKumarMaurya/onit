@@ -27,7 +27,6 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
   List<DocType> docTypeData = [];
 
   getDocumentType() async {
-
     var userDocTypeResponse = await HomeRepository().getDocType();
     if (userDocTypeResponse != null) {
       setState(() {

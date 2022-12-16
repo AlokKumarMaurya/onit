@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:onit/component/text_form_field.dart';
 import 'package:onit/utilities/app_nav.dart';
 import 'package:http/http.dart' as http;
+import '../../api config/api_client.dart';
 import '../../api config/onit_url.dart';
 import '../../utilities/app_prefereces.dart';
 
@@ -53,54 +54,34 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   }*/
 
 
-  testfn()async{
-    String profileHash = AppPreference().profileHash;
-    // final
-  }
+
 
     Future uploadDocument() async {
-    String profileHash = AppPreference().profileHash;
-
-
-    testfn();
-
-    if(file==null || file!.path.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Chosse file first")));
-    }
-   final formData = FormData.fromMap({
-      'profile_hash': profileHash,
-      'doc_type': "1",
-      'file': await   MultipartFile.fromFile(file!.path,
-          filename: file!.path.split("/").last,)
-
-    });
-
-    // var response = await Dio().post(
-    //   OnitUrl.uploadDoucment,
-    //   data: formData,
+      ApiClient().uploadDocNew(file);
+   //
+   //  String profileHash = AppPreference().profileHash;
+   //  if(file==null || file!.path.isEmpty){
+   //    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Chosse file first")));
+   //  }
+   //
+   //
+   // final formData = FormData.fromMap({
+   //    'profile_hash': profileHash,
+   //    'doc_type': "1",
+   //    'file': await   MultipartFile.fromFile(file!.path,
+   //        filename: file!.path.split("/").last,)
+   //
+   //  });
+    //
+    // var test=http.MultipartRequest(
+    //   "POST",Uri.parse(OnitUrl.uploadDoucment)
     // );
-    var test=http.MultipartRequest(
-      "POST",Uri.parse(OnitUrl.uploadDoucment)
-    );
-    print(profileHash);
-    print("111111111111111111111");
-    test.fields.addAll(
-      {'profile_hash': profileHash,
-    'doc_type':"1",});
-    test.files.add(await http.MultipartFile.fromPath("file",file!.path,
-      filename: file!.path.split("/").last,));
-    http.StreamedResponse res=await test.send();
-    print(res.statusCode);
-    print(res.reasonPhrase);
-    setState(() {});
-    // print(("response"+response.toString());
-    // // var res = jsonDecode(response.);
-    // print(("data is decoded");
-    // if (response.data["status"].toString() == "200") {
-    //   Fluttertoast.showToast(msg: 'Your Resume Uploaded Successfully');
-    // } else {
-    //   Fluttertoast.showToast(msg: response.data["message"]);
-    // }
+    // test.fields.addAll(
+    //   {'profile_hash': profileHash,
+    // 'doc_type':"1",});
+    // test.files.add(await http.MultipartFile.fromPath("file",file!.path,
+    //   filename: file!.path.split("/").last,));
+    // http.StreamedResponse res=await test.send();
   }
 
   @override
