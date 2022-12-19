@@ -84,7 +84,7 @@ debugPrint(dataValue);
     ),));
     }else{
       final postBody = FormData({
-        "profile_hash":"9b70e88c6217fd2b88edcf2cbd0894146",
+        "profile_hash":profileHash,
         "doc_type":1,
         "file":await  MultipartFile(file, filename: file.path.split("/").last.toString()),
       });
@@ -92,8 +92,13 @@ debugPrint(dataValue);
       try{
        var response=await post("https://onitonline.in/api/upload-user-file.php", postBody);
        debugPrint(response.statusCode.toString());
-       debugPrint(response.body.toString());
-       debugPrint("response.statusCode.toString()");
+       Get.showSnackbar(GetSnackBar(messageText:  Text("status:${response.statusCode.toString()} body:${response.body.toString()}",style: TextStyle(
+           color: Colors.white
+       ),),
+         backgroundColor: Colors.green,
+         duration: Duration(
+             seconds: 2
+         ),));
       }catch(e){
         Get.showSnackbar(GetSnackBar(messageText:  Text(e.toString(),style: TextStyle(
             color: Colors.white
