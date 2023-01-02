@@ -68,12 +68,15 @@ debugPrint(dataValue);
 
 
   uploadDocNew(File? file)async{
+    debugPrint("00000000000000000000000000000000000000000");
     Get.dialog(
       Center(
         child: CircularProgressIndicator(),
       )
     );
     String profileHash = AppPreference().profileHash;
+    debugPrint("00000000000000000000000000000000000000000");
+    debugPrint(profileHash);
     if(file==null || file!.path.isEmpty){
     Get.showSnackbar(GetSnackBar(messageText:  Text("Chosse file first",style: TextStyle(
       color: Colors.white
@@ -90,8 +93,9 @@ debugPrint(dataValue);
       });
 
       try{
-       var response=await post("https://onitonline.in/api/upload-user-file.php", postBody);
+       var response=await http.post(Uri.parse(OnitUrl.uploadDoucment),body: postBody);
        debugPrint(response.statusCode.toString());
+       debugPrint(response.body.toString());
        Get.showSnackbar(GetSnackBar(messageText:  Text("status:${response.statusCode.toString()} body:${response.body.toString()}",style: TextStyle(
            color: Colors.white
        ),),
@@ -110,5 +114,6 @@ debugPrint(dataValue);
       }
 Get.back();
     }
+    Get.back();
   }
 }
