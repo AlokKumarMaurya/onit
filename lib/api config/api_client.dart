@@ -89,21 +89,23 @@ debugPrint(dataValue);
       final postBody = FormData({
         "profile_hash":profileHash,
         "doc_type":1,
-        "file":await  MultipartFile(file, filename: file.path.split("/").last.toString()),
+        "file":  MultipartFile(file, filename: file.path.split("/").last.toString()),
       });
 
       try{
-       var response=await http.post(Uri.parse(OnitUrl.uploadDoucment),body: postBody);
+       var response=await post((OnitUrl.uploadDoucment), postBody);
        debugPrint(response.statusCode.toString());
        debugPrint(response.body.toString());
-       Get.showSnackbar(GetSnackBar(messageText:  Text("status:${response.statusCode.toString()} body:${response.body.toString()}",style: TextStyle(
-           color: Colors.white
-       ),),
-         backgroundColor: Colors.green,
-         duration: Duration(
-             seconds: 2
-         ),));
+      if(response.statusCode==200){
+        // var temp=jsonDecode(response.body);
+        debugPrint(response.body["message"]);
+        Get.back();
+        Get.back();
+        Fluttertoast.showToast(msg:response.body["message"] );
+
+      }
       }catch(e){
+        debugPrint(e.toString());
         Get.showSnackbar(GetSnackBar(messageText:  Text(e.toString(),style: TextStyle(
             color: Colors.white
         ),),
@@ -112,8 +114,8 @@ debugPrint(dataValue);
               seconds: 2
           ),));
       }
-Get.back();
+// Get.back();
     }
-    Get.back();
+    // Get.back();
   }
 }

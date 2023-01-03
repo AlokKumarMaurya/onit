@@ -1,6 +1,6 @@
 class OnitUrl{
-  static const baseUrl = 'https://onitonline.in';
-  // static const baseUrl = 'http://test.devarshidevaldhaam.com/';
+  // static const baseUrl = 'https://onitonline.in';
+  static const baseUrl = 'http://test.devarshidevaldhaam.com/';
   static const login = '$baseUrl/api/login.php';
   static const getService = '$baseUrl/api/get-service.php?profile_hash=';
   static const appliedService = '$baseUrl/api/get-service-applied.php';

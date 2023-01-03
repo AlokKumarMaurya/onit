@@ -190,14 +190,14 @@ if(userOtherData!=null){
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
+        child: contactForms.isNotEmpty?Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
               height: 5,
             ),
-            const Text(
+             Text(
               "Enter Your Other Details Properly",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -328,7 +328,7 @@ if(userOtherData!=null){
                       itemBuilder: (_, index) {
                         return contactForms[index];
                       }),
-                ):const ShimmerWidget():Container(),
+                ):Container():const ShimmerWidget(),
 
 
 
@@ -363,6 +363,13 @@ if(userOtherData!=null){
 
 
           ],
+        ):Container(
+          height: MediaQuery.of(context).size.height-200,
+          width: MediaQuery.of(context).size.width,
+          alignment: Alignment.center,
+          child: Text(
+            "No Data found"
+          ),
         ),
       ),
     );
