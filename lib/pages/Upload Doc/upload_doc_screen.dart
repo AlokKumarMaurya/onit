@@ -1,20 +1,24 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:onit/api%20config/onit_url.dart';
 import 'package:onit/component/text_form_field.dart';
 import 'package:onit/utilities/app_nav.dart';
 import 'package:onit/utilities/app_routes.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:http/http.dart' as http;
 import '../../api config/api_client.dart';
 import '../../component/shimmer.dart';
 import '../../data_layer/repository/homePageRepository.dart';
+import '../../model/all_uploaded_doc_modal.dart';
 import '../../model/get_doc_type_model.dart';
+import '../../utilities/app_prefereces.dart';
 
 class UploadDocScreen extends ConsumerStatefulWidget {
   const UploadDocScreen({super.key});
@@ -32,7 +36,7 @@ Rxn selectedDocType=Rxn();
   List<DocType> docTypeData = [];
   File? file;
   RxString filesname="".obs;
-
+RxList<Datum> uploadedDocList=RxList<Datum>.empty(growable: true);
   getDocumentType() async {
     var userDocTypeResponse = await HomeRepository().getDocType();
     if (userDocTypeResponse != null) {
@@ -56,6 +60,7 @@ Rxn selectedDocType=Rxn();
 
   @override
   void initState() {
+    getAllUploadedDoc();
     getDocumentType();
     super.initState();
   }
@@ -75,6 +80,118 @@ Rxn selectedDocType=Rxn();
             const SizedBox(
               height: 15,
             ),
+
+
+
+
+
+            Obx(()=>uploadedDocList.value!=null?  uploadedDocList.value.isNotEmpty?
+            ListView.builder(
+              itemCount: uploadedDocList.value.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                var doctDAtaList=docTypeData[index];
+                return  Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                  child: Material(
+                    elevation: 5,
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${uploadedDocList.value[index].title}",
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5,),
+                          Text("Uploaded on : ${uploadedDocList.value[index].createdAt.toString().padLeft(10)}"),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  // debugPrint(doctDAtaList.)
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.red),
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+Get.to(ViewDocumentPdf(url:uploadedDocList.value[index].fileName));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.blue),
+                              child: Text(
+                                "View",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            )
+                :Container(
+              child: Center(heightFactor: 10,child:Text("No data found!!")),
+            ):const ShimmerWidget()),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
             GestureDetector(
               onTap: () async {
                 uploadDocDialod(context);
@@ -94,89 +211,6 @@ Rxn selectedDocType=Rxn();
             const SizedBox(
               height: 10,
             ),
-            // get_doc_type_data_model!=null?  docTypeData.isNotEmpty?
-            // ListView.builder(
-            //   itemCount: docTypeData.length,
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemBuilder: (context, index) {
-            //     var doctDAtaList=docTypeData[index];
-            //     return  Padding(
-            //       padding:
-            //           const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-            //       child: Material(
-            //         elevation: 5,
-            //         child: ListTile(
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(10)),
-            //           title: Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             children: [
-            //               Text(
-            //                 "${doctDAtaList.title}",
-            //                 style: TextStyle(fontWeight: FontWeight.w600),
-            //               ),
-            //             ],
-            //           ),
-            //           subtitle: Row(
-            //             children: [
-            //               GestureDetector(
-            //                 onTap: () async {
-            //                   // debugPrint(doctDAtaList.)
-            //                 },
-            //                 child: Container(
-            //                   padding: EdgeInsets.symmetric(
-            //                       horizontal: 10, vertical: 5),
-            //                   margin: EdgeInsets.symmetric(vertical: 5),
-            //                   decoration: BoxDecoration(
-            //                       borderRadius: BorderRadius.circular(5),
-            //                       color: Colors.red),
-            //                   child: Text(
-            //                     "Delete",
-            //                     style: TextStyle(
-            //                         color: Colors.white, fontSize: 12),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //           trailing: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //               GestureDetector(
-            //                 onTap: () async {},
-            //                 child: Container(
-            //                   padding: EdgeInsets.symmetric(
-            //                       horizontal: 10, vertical: 5),
-            //                   decoration: BoxDecoration(
-            //                       borderRadius: BorderRadius.circular(5),
-            //                       color: Colors.blue),
-            //                   child: Text(
-            //                     "View",
-            //                     style: TextStyle(
-            //                         color: Colors.white, fontSize: 12),
-            //                   ),
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // )
-            //
-            //
-            //     :Container(
-            //   child: Center(heightFactor: 10,child:Text("No data found!!")),
-            // ):const ShimmerWidget()
           ],
         ),
       ),
@@ -193,7 +227,7 @@ Rxn selectedDocType=Rxn();
             width: 300,
             alignment: Alignment.center,
 child: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
+  crossAxisAlignment: CrossAxisAlignment.center,
   children: [
       SizedBox(height: 10,),
       Padding(
@@ -247,7 +281,7 @@ Container(
     children: [
         InkWell(
             onTap: ()async {
-              List<String> fExtension = ["pdf", "doc", "docx"];
+              List<String> fExtension = ["pdf", "doc", "docx","png","jpg","jpeg"];
 
               FilePickerResult? result =
               await FilePicker.platform.pickFiles(
@@ -323,11 +357,6 @@ Container(
         child: DropdownButtonHideUnderline(
             child: DropdownButton(
                 isExpanded: true,
-                // style: TextStyle(
-                //   overflow: TextOverflow.ellipsis,
-                //   color: Colors.black,
-                //   fontSize: 15
-                // ),
                 hint: Text("Select value",style: TextStyle(
                     color: Colors.black
                 ),),
@@ -337,8 +366,10 @@ Container(
                       child: Text(e.title)) ;
                 }).toList(), onChanged:(val){
 //                   selectedDocType=Rxn();
-//               selectedDocType.value=val.toString();
+//               selectedDocType.value=val;
                   debugPrint(val.toString());
+                  selectedDocType.value=val;
+
 //                   // setState((){
 //                   //   selectedDocType.value=val;
 //                   // });
@@ -348,5 +379,98 @@ Container(
             ),
 
         )));
+  }
+
+
+  void getAllUploadedDoc()async{
+    var temp=await AppPreference().profileHash;
+    var res=await http.post(Uri.parse(OnitUrl.getAllUserFile),body: {
+      "profile_hash": temp
+    });
+
+    debugPrint(res.statusCode.toString());
+    debugPrint(temp.toString());
+    debugPrint(res.body.toString());
+    if(res.statusCode==200){
+      UploadedDocumentModal modal=UploadedDocumentModal.fromJson(jsonDecode(res.body));
+      uploadedDocList.value=modal.data;
+    }
+
+  }
+}
+
+
+
+
+class ViewDocumentPdf extends StatefulWidget {
+   ViewDocumentPdf({Key? key,required this.url}) : super(key: key);
+String url;
+
+  @override
+  State<ViewDocumentPdf> createState() => _ViewDocumentPdfState();
+}
+
+class _ViewDocumentPdfState extends State<ViewDocumentPdf> {
+  PDFDocument? document;
+  @override
+  void initState() {
+
+    loadDoc();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  loadDoc()async{
+    var aa=await PDFDocument.fromURL(widget.url);
+    setState(()  { document =aa; });
+
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return PDFViewer(
+      document: document!,
+      zoomSteps: 1,
+      //uncomment below line to preload all pages
+      // lazyLoad: false,
+      // uncomment below line to scroll vertically
+      scrollDirection: Axis.vertical,
+
+      //uncomment below code to replace bottom navigation with your own
+      /* navigationBuilder:
+                          (context, page, totalPages, jumpToPage, animateToPage) {
+                        return ButtonBar(
+                          alignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.first_page),
+                              onPressed: () {
+                                jumpToPage()(page: 0);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                animateToPage(page: page - 2);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.arrow_forward),
+                              onPressed: () {
+                                animateToPage(page: page);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.last_page),
+                              onPressed: () {
+                                jumpToPage(page: totalPages - 1);
+                              },
+                            ),
+                          ],
+                        );
+                      }, */
+    );
   }
 }

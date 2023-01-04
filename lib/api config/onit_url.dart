@@ -15,4 +15,5 @@ class OnitUrl{
   static const forgetPassword = '$baseUrl/api/forgot-password.php';
   static const resetPassword="${baseUrl}/api/change-password.php";
   static const updateOtherDetails="${baseUrl}/api/update-user-other.php";
+  static const getAllUserFile="${baseUrl}/api/get-user-file.php";
 }

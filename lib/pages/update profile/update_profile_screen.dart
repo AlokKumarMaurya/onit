@@ -265,7 +265,7 @@ bool isloading=false;
       title: "",
       content: CircularProgressIndicator()
     );
-   var res=await ApiClient().UpdateUserProfile(_name.text.removeAllWhitespace,_email.text.removeAllWhitespace,_phone.text.removeAllWhitespace);
+   var res=await ApiClient().UpdateUserProfile(_name.text,_email.text,_phone.text);
    if(res !=null){
      Get.back();
    }
