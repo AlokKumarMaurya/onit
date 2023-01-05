@@ -67,7 +67,7 @@ debugPrint(dataValue);
 
 
 
-  uploadDocNew(File? file)async{
+Future<String>  uploadDocNew(File? file , int type)async{
     debugPrint("00000000000000000000000000000000000000000");
     Get.dialog(
       Center(
@@ -85,10 +85,12 @@ debugPrint(dataValue);
       duration: Duration(
       seconds: 2
     ),));
+
+        Get.back();
     }else{
       final postBody = FormData({
         "profile_hash":profileHash,
-        "doc_type":1,
+        "doc_type":type,
         "file":  MultipartFile(file, filename: file.path.split("/").last.toString()),
       });
 
@@ -102,8 +104,9 @@ debugPrint(dataValue);
         Get.back();
         Get.back();
         Fluttertoast.showToast(msg:response.body["message"] );
-
+return "sdds";
       }
+      return "sds";
       }catch(e){
         debugPrint(e.toString());
         Get.showSnackbar(GetSnackBar(messageText:  Text(e.toString(),style: TextStyle(
@@ -113,9 +116,11 @@ debugPrint(dataValue);
           duration: Duration(
               seconds: 2
           ),));
+        return "dfm,";
       }
 // Get.back();
     }
+    return "sdmm";
     // Get.back();
   }
 }

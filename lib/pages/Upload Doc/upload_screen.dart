@@ -57,7 +57,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
 
 
     Future uploadDocument() async {
-      ApiClient().uploadDocNew(file);
+      // ApiClient().uploadDocNew(file);
    //
    //  String profileHash = AppPreference().profileHash;
    //  if(file==null || file!.path.isEmpty){
