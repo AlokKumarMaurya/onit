@@ -55,7 +55,13 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
           docTypeData = get_doc_type_data_model?.docType ?? [];
           var te = docTypeData.forEach((element) {
             debugPrint(element.title);
-            testList.value.add(element.title);
+            debugPrint(element.type);
+            element.type=="0"?testList.value.add(element.title):debugPrint("not adding");
+            if(element.type==0){
+              testList.value.add(element.title);
+              debugPrint(testList.value.toString());
+            }
+
           });
           debugPrint(testList.value.toString());
         } else {
@@ -67,6 +73,11 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
 
       });
     }
+  }
+
+
+  deleteDocument()async{
+
   }
 
 
@@ -334,8 +345,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                                   fontSize: 16
                               )),),
                         )
-                      ],
-
+                      ]
                     ),
                   ),
                   SizedBox(height: 20,),
@@ -347,6 +357,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                         ElevatedButton(onPressed: () {
 
                           ApiClient().uploadDocNew(file,selectedFileType.value).then((asas){
+                            debugPrint("323239828389238983299399293");
                             getAllUploadedDoc();
                             selectedFileType.value=0;
                             selectedDocType.value=null;
@@ -389,7 +400,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                     hint: Text("Select type", style: TextStyle(
                         color: Colors.black
                     ),),
-                    items: testList.value.map((e) {
+                    items: testList.value.toSet().map((e) {
                       return DropdownMenuItem(
                           value: e,
                           child: Text(e));
@@ -454,10 +465,14 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
 
   Future<void> _launchUrl(String _url) async {
     var temp=Uri.parse(_url);
-    if (!await launchUrl(temp)) {
-      debugPrint("934289304780238794294972034702804");
-      throw 'Could not launch $_url';
+    if(await canLaunchUrl(temp)){
+      // await launchUrl(Uri.parse("http://pub.dev/packages/url_launcher"));
+      await launchUrl(Uri.parse(_url));
     }
+    // if (!await launchUrl(temp)) {
+    //   debugPrint("934289304780238794294972034702804");
+    //   throw 'Could not launch $_url';
+    // }
   }
 }
 

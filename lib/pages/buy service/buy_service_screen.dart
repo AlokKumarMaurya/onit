@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:onit/api%20config/onit_url.dart';
 
 
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -10,7 +13,7 @@ import '../../component/shimmer.dart';
 import '../../data_layer/repository/homePageRepository.dart';
 import '../../model/service_model.dart';
 import '../../utilities/app_prefereces.dart';
-
+import 'package:http/http.dart'as http;
 class BuyService extends ConsumerStatefulWidget {
   const BuyService( {super.key});
 
@@ -22,9 +25,12 @@ class _BuyServiceState extends ConsumerState<BuyService> {
 
   ServiceModel? service_model;
   List<ServiceData> serviceData = [];
+  int temp_amount=0;
+  String? profileHash;
+String? serviceId;
+
 
   getservices() async {
-
     var response = await HomeRepository().getService();
     if (response != null) {
       setState(() {
@@ -45,10 +51,29 @@ class _BuyServiceState extends ConsumerState<BuyService> {
   }
 
 
+  applyServiceApi(String orderId,String paymentId)async{
+    var response=await http.post(Uri.parse(OnitUrl.applyService),body: {
+      "razorpay_order_id":orderId.toString(),
+      "profile_hash":profileHash!,
+      "price":temp_amount.toString(),
+     " razorpay_payment_id":paymentId.toString(),
+      "service_id":serviceId.toString(),
+    });
+    debugPrint("39849794739473749379479493");
+    debugPrint(response.body.toString());
+    debugPrint(response.statusCode.toString());
+    if(response.statusCode==200){
+      var tem=jsonDecode(response.body);
+      Fluttertoast.showToast(msg: tem["message"]);
+    }
+  }
 
 
   Razorpay _razorpay = Razorpay();
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    debugPrint("payment successfulllllllllllllllllllllll");
+    // debugPrint(response);
+    applyServiceApi(response.orderId.toString(),response.paymentId.toString());
     getservices();
 
   }
@@ -85,10 +110,14 @@ class _BuyServiceState extends ConsumerState<BuyService> {
 
   }
 
+  getProfileHash()async{
+    setState((){ profileHash = AppPreference().profileHash;});
 
+  }
 
   @override
   void initState() {
+    getProfileHash();
     getservices();
     super.initState();
   }
@@ -147,6 +176,10 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                           const SizedBox(height: 10,),
                           GestureDetector(
                             onTap: () async {
+                              setState(() {
+                                serviceId=serviceList.sId;
+                                temp_amount=int.parse(serviceList.price);
+                              });
                               razorPayPayment(amount:int.parse(serviceList.price) ,description:serviceList.content,name: serviceList.title );
                             },
                             child: Container(

@@ -162,7 +162,7 @@ bool isloading=false;
                             readonly: true,
                             cotroller: _fatherName,
                             hintText: _fatherName.text!= ""
-                                ? "${userData[0].fatherName}":"Father Name",
+                                ? "${userData[0].fatherName??"Father Name"}":"Father Name",
                             prefixIcon: Icon(
                               Icons.person_outline_outlined,
                               color: Colors.black,
@@ -179,7 +179,7 @@ bool isloading=false;
                             readonly: true,
                             cotroller: _motherName,
                             hintText: _motherName.text!= ""
-                                ? "${userData[0].motherName}":"Mother Name",
+                                ? "${userData[0].motherName??"Mother name"}":"Mother Name",
                             prefixIcon: Icon(
                               Icons.family_restroom,
                               color: Colors.black,
@@ -196,7 +196,7 @@ bool isloading=false;
                             readonly: true,
                             cotroller: _permanentAddress,
                             hintText: _permanentAddress.text!= ""
-                                ? "${userData[0].permanentAddress}":"Permanent Address",
+                                ? "${userData[0].permanentAddress??"Permanent Address"}":"Permanent Address",
                             prefixIcon: Icon(
                               Icons.home,
                               color: Colors.black,
@@ -216,7 +216,7 @@ bool isloading=false;
                             readonly: true,
                             cotroller: _currentAddress,
                             hintText: _currentAddress.text!= ""
-                                ? "${userData[0].currentAddress}":"Current Address",
+                                ? "${userData[0].currentAddress??"Current Address"}":"Current Address",
                             prefixIcon: Icon(
                               Icons.home,
                               color: Colors.black,
