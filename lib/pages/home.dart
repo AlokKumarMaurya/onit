@@ -14,6 +14,7 @@ import 'package:onit/utilities/app_nav.dart';
 import 'package:onit/utilities/app_routes.dart';
 
 
+import '../api config/api_client.dart';
 import '../component/app_tab_menu.dart';
 import '../component/shimmer.dart';
 import '../model/get_config_model.dart';
@@ -97,7 +98,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           actions: [
             IconButton(
                 onPressed: () {
-logoutAlertBox();
+                  
+                  openDialog();
+//logoutAlertBox();
 
                 },
                 icon: const Icon(
@@ -226,5 +229,149 @@ logoutAlertBox();
     //     ),
     //   )
     // );
+  }
+  
+  void openDialog(){
+    Get.bottomSheet(
+      isScrollControlled: true,
+      shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
+      ),
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12))
+        ),
+        height: 100,
+        // color:Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(onPressed: (){
+              Get.back();
+              changePasswordSheet();
+            }, child:Text("Change Password")),
+            TextButton(onPressed: (){
+              Get.back();
+              logoutAlertBox();
+            }, child:Text("Logout"))
+          ],
+        ),
+      )
+    );
+  }
+
+  void changePasswordSheet(){
+    var pass;
+    Get.bottomSheet(
+        isScrollControlled: true,
+        shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
+        ),
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12))
+          ),
+          height: 280,
+          // color:Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(height: 10,),
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black),
+                  color: Colors.grey.shade200
+                ),
+                  width:MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Icon(Icons.key_off,size: 60),
+                  )),
+              SizedBox(height: 20,),
+             Padding(
+               padding: const EdgeInsets.symmetric(horizontal: 10.0),
+               child: Text("Change password",style: TextStyle(
+                 color: Colors.black,
+                 fontSize: 20,
+                 fontWeight: FontWeight.bold
+               ),),
+             ),
+              SizedBox(height: 10,),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.black)
+                ),
+                child: TextFormField(
+                  onChanged: (val){
+                    setState(() {
+                      pass=val;
+                    });
+                  },
+                  obscureText: true,
+                  obscuringCharacter: "#",
+                  decoration: InputDecoration(
+                    hintText: "Your Password",
+                    border: InputBorder.none
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+            InkWell(
+              onTap: (){
+                Get.back();
+                chnagePassFn(pass.toString());
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 35,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2
+                  )
+                ),
+                child: Text(""
+                    "Change password"),
+              ),
+            ),
+              SizedBox(height: 20,),
+            ],
+          ),
+        )
+    );
+  }
+
+  void chnagePassFn(String pass)async{
+    debugPrint(pass.toString());
+    debugPrint("pass.toString()");
+    if(pass.isNotEmpty){
+      Get.dialog(Center(child: CircularProgressIndicator()));
+      var response=await ApiClient().changePassWord(pass);
+      if(response!=null){
+        // Get.back();
+        Get.back();
+        Fluttertoast.showToast(msg: response.toString());
+      }
+      debugPrint(response.toString());
+    }else{
+      Fluttertoast.showToast(msg: "Enter a valid password");
+    }
+
+    debugPrint("response.toString()12121212121212==========1222300000000000");
   }
 }

@@ -123,4 +123,30 @@ return "sdds";
     return "sdmm";
     // Get.back();
   }
+
+
+  changePassWord(String pass)async{
+    var profileHash=AppPreference().profileHash;
+    debugPrint("0000000000000000000000000");
+    debugPrint(pass);
+    debugPrint(profileHash);
+    var body={
+      "profile_hash":profileHash,
+      "password":pass
+    };
+    try{
+      var response=await http.post(Uri.parse(OnitUrl.resetPassword),body:body);
+      if(response.statusCode==200){
+        debugPrint(response.body.toString());
+        var temp=jsonDecode(response.body);
+        debugPrint("9389487934787983984093849283-----------------------");
+        debugPrint(temp["message"].toString());
+        return temp["message"];
+      }
+    }catch(e){
+      debugPrint(e.toString());
+      debugPrint("=======================");
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }
