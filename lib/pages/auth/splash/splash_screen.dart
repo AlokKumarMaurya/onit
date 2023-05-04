@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,20 +15,17 @@ class SplashPage extends ConsumerStatefulWidget {
 class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () async{
-      print(
-          "Login: ${AppPreference().savedLogin}");
+    Future.delayed(const Duration(seconds: 2), () async {
+      print("Login: ${AppPreference().savedLogin}");
 
       if (AppPreference().savedLogin) {
-        AppNav.toNamed(AppRoutes.homepage);
+        AppNav.offAllToNamed(AppRoutes.homepage);
       } else {
         AppNav.toNamed(AppRoutes.loginPage);
       }
 
-
-     /* AppNav.toNamed(AppRoutes.loginPage);*/
+      /* AppNav.toNamed(AppRoutes.loginPage);*/
     });
-
 
     super.initState();
   }
