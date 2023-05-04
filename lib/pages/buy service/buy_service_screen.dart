@@ -119,12 +119,12 @@ class _BuyServiceState extends ConsumerState<BuyService> {
       Get.put(BuyServiceListController());
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        buyServiceListController.shouldShowDetailView.value = false;
-        return false;
-      },
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Onit"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -159,7 +159,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                     children: [
                                       Text(
                                         serviceList.title,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ],
@@ -168,7 +168,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Text(" ${serviceList.content}",
@@ -176,7 +176,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                               fontSize: 14,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Text(
@@ -185,7 +185,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                               fontSize: 12,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Text(
@@ -255,7 +255,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                         )
                       : const Center(
                           heightFactor: 10, child: Text("No data found!!"))
-                  : ShimmerWidget()
+                  : const ShimmerWidget()
             ],
           ),
         ),

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:onit/api%20config/onit_url.dart';
 
+import '../model/bannerModal.dart';
 import '../utilities/app_prefereces.dart';
 import 'network_utility.dart';
 
@@ -162,6 +163,15 @@ class ApiClient extends GetConnect {
       debugPrint(e.toString());
       debugPrint("=======================");
       Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  getBanner() async {
+    var res = await GetConnect().get(OnitUrl.getBanner);
+    print("this is the response of the get banner ${res.body}");
+    print("this is the response of the get banner ${res.statusCode}");
+    if (res.statusCode == 200) {
+      return bannerModalFromJson(res.body);
     }
   }
 }

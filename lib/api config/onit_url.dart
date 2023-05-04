@@ -20,5 +20,11 @@ class OnitUrl {
 
   //changes on 27th april    "http://test.devarshidevaldhaam.com/
   static const getAllBuyServiceList =
-      "https://onitonline.in/api/get-service-category.php";
+      "http://test.devarshidevaldhaam.com/api/get-service-category.php";
+  static const imagePath = "http://test.devarshidevaldhaam.com/upload/pro/";
+
+  static String getBanner =
+      "http://test.devarshidevaldhaam.com/api/get-slider.php";
+  //image path
+//upload/pro
 }

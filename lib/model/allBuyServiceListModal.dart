@@ -13,7 +13,7 @@ String allBuyServiceModalToJson(AllBuyServiceModal data) =>
 class AllBuyServiceModal {
   int status;
   String message;
-  List<DatumOfAllBuyServiceList> data;
+  List<Datum> data;
 
   AllBuyServiceModal({
     required this.status,
@@ -25,8 +25,7 @@ class AllBuyServiceModal {
       AllBuyServiceModal(
         status: json["status"],
         message: json["message"],
-        data: List<DatumOfAllBuyServiceList>.from(
-            json["data"].map((x) => DatumOfAllBuyServiceList.fromJson(x))),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,27 +35,30 @@ class AllBuyServiceModal {
       };
 }
 
-class DatumOfAllBuyServiceList {
+class Datum {
   String id;
   String title;
   String slug;
+  String image;
 
-  DatumOfAllBuyServiceList({
+  Datum({
     required this.id,
     required this.title,
     required this.slug,
+    required this.image,
   });
 
-  factory DatumOfAllBuyServiceList.fromJson(Map<String, dynamic> json) =>
-      DatumOfAllBuyServiceList(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         title: json["title"],
         slug: json["slug"],
+        image: json["image"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "slug": slug,
+        "image": image,
       };
 }

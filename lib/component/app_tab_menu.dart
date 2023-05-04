@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../api config/api_client.dart';
+import '../model/bannerModal.dart';
 import '../pages/Upload Doc/upload_doc_screen.dart';
 import '../pages/buy service/buyServiceCombinedView.dart';
 import '../pages/orders/orders_Screen.dart';
@@ -13,7 +15,7 @@ import '../utilities/app_nav.dart';
 import '../utilities/app_prefereces.dart';
 import '../utilities/app_routes.dart';
 
-class AppTabMenu extends StatelessWidget {
+class AppTabMenu extends StatefulWidget {
   final List<String> menuItemsList;
   Function(int index) onItemClick;
   final int selectedIndex;
@@ -28,12 +30,27 @@ class AppTabMenu extends StatelessWidget {
       this.margin,
       this.padding});
 
+  @override
+  State<AppTabMenu> createState() => _AppTabMenuState();
+}
+
+class _AppTabMenuState extends State<AppTabMenu> {
   final List<Color> colorList = [
     Colors.deepOrange,
     Colors.blueGrey,
     Colors.indigoAccent,
     Colors.red
   ];
+
+  RxList<BannerModalDatum> bannerModalDatum =
+      List<BannerModalDatum>.empty(growable: true).obs;
+
+  @override
+  void initState() {
+    getBannerList();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,121 +76,151 @@ class AppTabMenu extends StatelessWidget {
                 ))
           ],
         ),
-        body: Container(
-          // height: 50,
-          // width: 100,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            // border: Border.all(color: AppColors.borderShade3)
-          ),
-          margin: margin ??
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          // padding:padding?? EdgeInsets.all(20),
-          child: GridView.builder(
-            itemCount: menuItemsList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 1,
-              childAspectRatio: 1.5,
-            ),
-            itemBuilder: (context, index) => InkWell(
-              onTap: () {
-                if (index == 0) {
-                  Get.to(() => OrderScreen());
-                } else if (index == 1) {
-                  Get.to(() => BuyServiceCombineView());
-                } else if (index == 2) {
-                  Get.to(() => OtherDetailsScreen());
-                } else if (index == 3) {
-                  Get.to(() => UploadDocScreen());
-                }
-                onItemClick(index);
-              },
-              child: Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        // offset: const Offset(2, 2),
-                        spreadRadius: 5,
-                        blurRadius: 12,
-                        color: /*colorList[index]
-                              .withOpacity(0.3) */
-                            Colors.grey.shade200,
-                      )
-                    ]),
-                child: Container(
-                  // color: colorList[index],
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        index == 0
-                            ? Icons.miscellaneous_services
-                            : index == 1
-                                ? Icons.note_alt_rounded
-                                : index == 3
-                                    ? Icons.upload_file_sharp
-                                    : Icons.person,
-                        size: 40,
-                        color: colorList[index],
-                      ),
-                      Text(
-                        menuItemsList[index],
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ) /*Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                HorizontalScrollView(
-                  children: List.generate(menuItemsList.length, (index) {
-                    var menuItem = menuItemsList[index];
-                    return GestureDetector(
-                      onTap:() => onItemClick(index),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: selectedIndex == index
-                                      ? Colors.blue
-                                      : Colors.white,
-                                  width: 5)),
-                        ),
-                        padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
-                        child: Text(
-                          menuItem,
-                         //
-                          style: TextStyle(
-
-                              fontSize: fontSize,color: selectedIndex==index?Colors.blue:Colors.black
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Obx(() => bannerModalDatum.length > 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: CarouselSlider.builder(
+                        itemCount: bannerModalDatum.length,
+                        itemBuilder: (BuildContext context, int index,
+                                int pageViewIndex) =>
+                            Container(
+                          width: Get.width,
+                          color: Colors.pink,
+                          child: Image.network(
+                            bannerModalDatum[index].photo,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              "assets/noImage.png",
+                              fit: BoxFit.cover,
+                            ),
                           ),
-
-
+                        ),
+                        options: CarouselOptions(autoPlay: true, height: 150),
+                      ),
+                    )
+                  : const SizedBox()),
+              BuyServiceCombineView(),
+              Container(
+                height: 100,
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  // border: Border.all(color: AppColors.borderShade3)
+                ),
+                margin: widget.margin ??
+                    const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                // padding:padding?? EdgeInsets.all(20),
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.menuItemsList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 1,
+                    mainAxisSpacing: 1,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      if (index == 0) {
+                        Get.to(() => const OrderScreen());
+                      } else if (index == 1) {
+                        Get.to(() => const OtherDetailsScreen());
+                      } else if (index == 2) {
+                        Get.to(() => const UploadDocScreen());
+                      }
+                      widget.onItemClick(index);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              // offset: const Offset(2, 2),
+                              spreadRadius: 5,
+                              blurRadius: 12,
+                              color: /*colorList[index]
+                                    .withOpacity(0.3) */
+                                  Colors.grey.shade200,
+                            )
+                          ]),
+                      child: Container(
+                        // color: colorList[index],
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              index == 0
+                                  ? Icons.miscellaneous_services
+                                  : index == 1
+                                      ? Icons.note_alt_rounded
+                                      : index == 3
+                                          ? Icons.upload_file_sharp
+                                          : Icons.person,
+                              size: 40,
+                              color: colorList[index],
+                            ),
+                            Text(
+                              widget.menuItemsList[index],
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  }),
-                ),
-              ])*/
-          ,
+                    ),
+                  ),
+                ) /*Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      HorizontalScrollView(
+                        children: List.generate(menuItemsList.length, (index) {
+                          var menuItem = menuItemsList[index];
+                          return GestureDetector(
+                            onTap:() => onItemClick(index),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: selectedIndex == index
+                                            ? Colors.blue
+                                            : Colors.white,
+                                        width: 5)),
+                              ),
+                              padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
+                              child: Text(
+                                menuItem,
+                               //
+                                style: TextStyle(
+
+                                    fontSize: fontSize,color: selectedIndex==index?Colors.blue:Colors.black
+                                ),
+
+
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ])*/
+                ,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -476,5 +523,16 @@ class AppTabMenu extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  void getBannerList() async {
+    print("213123442423123");
+    try {
+      BannerModal modal = await ApiClient().getBanner();
+      bannerModalDatum.value = modal.data;
+    } catch (e) {
+      print(e.toString());
+      bannerModalDatum.value = [];
+    }
   }
 }
