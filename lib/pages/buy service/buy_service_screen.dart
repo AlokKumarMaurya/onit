@@ -17,6 +17,7 @@ import '../../utilities/app_prefereces.dart';
 
 class BuyService extends ConsumerStatefulWidget {
   final String catID;
+
   const BuyService({super.key, required this.catID});
 
   @override
@@ -65,6 +66,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
   }
 
   final Razorpay _razorpay = Razorpay();
+
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     debugPrint("payment successful");
     // debugPrint(response);
@@ -117,6 +119,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
 
   BuyServiceListController buyServiceListController =
       Get.put(BuyServiceListController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,120 +142,264 @@ class _BuyServiceState extends ConsumerState<BuyService> {
               ),
               service_model != null
                   ? serviceData.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: serviceData.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            var serviceList = serviceData[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 5),
-                              child: Material(
-                                elevation: 5,
-                                child: ListTile(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        serviceList.title,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(" ${serviceList.content}",
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          "Created at: ${DateFormat.yMMMMd().format(DateTime.parse(serviceList.createdAt.toString()))}",
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          "Updated at: ${DateFormat.yMMMMd().format(DateTime.parse(serviceList.updatedAt.toString()))}",
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "₹ ${serviceList.price}",
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          if (serviceList.status == "0" ||
-                                              serviceList.status == 0) {
-                                            Fluttertoast.showToast(
-                                                msg:
+                      ? SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          width: 450,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black)),
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 30,child: Text("  S NO.  ",style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                    ),)),
+                                    Container(
+                                      width: 100,
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration:const BoxDecoration(
+                                          border: Border(
+                                              left:
+                                              BorderSide(color: Colors.black),
+                                              right: BorderSide(
+                                                  color: Colors.black))),
+                                      child: Text("Form",style: TextStyle(fontWeight: FontWeight.bold),),
+                                    ),
+                                    SizedBox(width: 100,child: Center(child: Text("Date",style: TextStyle(fontWeight: FontWeight.bold),))),
+                                    Container(
+                                      width: 60,
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration:const BoxDecoration(
+                                          border: Border(
+                                              left:
+                                              BorderSide(color: Colors.black),
+                                              right: BorderSide(
+                                                  color: Colors.black))),
+                                      child: Text("Form Fee",textAlign: TextAlign.center,style: TextStyle(
+                                        fontWeight: FontWeight.bold
+                                      ),),
+                                    ),
+                                    SizedBox(width: 60,child: Center(child: Text("Service charge",textAlign: TextAlign.center,style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                    ),))),
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration:const BoxDecoration(
+                                          border: Border(
+                                              left:
+                                              BorderSide(color: Colors.black),
+                                              right: BorderSide(
+                                                  color: Colors.black))),
+                                      child: Text("Total",style: TextStyle(
+                                        fontWeight: FontWeight.bold
+                                      ),),
+                                    ),
+                                    InkWell(
+                                      child: Text(" ",style: TextStyle(
+                                          fontSize: 15,fontWeight: FontWeight.bold,color: Colors.blueAccent
+                                      ),),
+                                    )
+                                  ],
+                                ),
+                              ),
+
+
+                              ListView.builder(
+                                  itemCount: serviceData.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    var serviceList = serviceData[index];
+                                    return Container(
+                                      height: 35,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.black)),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(width: 30,child: Text("  ${index + 1}  ")),
+                                          Container(
+                                            width: 100,
+                                            height: 35,
+                                            alignment: Alignment.center,
+                                            decoration:const BoxDecoration(
+                                                border: Border(
+                                                    left:
+                                                        BorderSide(color: Colors.black),
+                                                    right: BorderSide(
+                                                        color: Colors.black))),
+                                            child: Text(serviceList.title),
+                                          ),
+                                          SizedBox(width: 100,child: Center(child: Text(DateFormat("yyyy-MM-dd").format(serviceList.fromDate)))),
+                                          Container(
+                                            width: 60,
+                                            height: 35,
+                                            alignment: Alignment.center,
+                                            decoration:const BoxDecoration(
+                                                border: Border(
+                                                    left:
+                                                    BorderSide(color: Colors.black),
+                                                    right: BorderSide(
+                                                        color: Colors.black))),
+                                            child: Text("₹"+serviceList.price),
+                                          ),
+                                          SizedBox(width: 60,child: Center(child: Text("₹"+service_model!.serviceCharge))),
+                                          Container(
+                                            width: 50,
+                                            height: 35,
+                                            decoration:const BoxDecoration(
+                                                border: Border(
+                                                    left:
+                                                    BorderSide(color: Colors.black),
+                                                    right: BorderSide(
+                                                        color: Colors.black))),
+                                            child: Text("₹"+(int.parse(service_model!.serviceCharge)+int.parse(serviceList.price)).toString()),
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              if (serviceList.status == "0" ||
+                                                  serviceList.status == 0) {
+                                                Fluttertoast.showToast(
+                                                    msg:
                                                     "You already purchased this serivce");
-                                          } else {
-                                            setState(() {
-                                              serviceId = serviceList.sId;
-                                              temp_amount =
-                                                  int.parse(serviceList.price);
-                                            });
-                                            razorPayPayment(
-                                                amount: int.parse(
-                                                    serviceList.price),
-                                                description:
+                                              } else {
+                                                setState(() {
+                                                  serviceId = serviceList.sId;
+                                                  temp_amount =
+                                                      int.parse(serviceList.price);
+                                                });
+                                                razorPayPayment(
+                                                    amount: int.parse(
+                                                        serviceList.price),
+                                                    description:
                                                     serviceList.content,
-                                                name: serviceList.title);
-                                          }
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: Colors.blue),
-                                          child: const Text(
-                                            "Pay Now",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12),
+                                                    name: serviceList.title);
+                                              }
+                                            },
+                                            child: Text("Pay",style: TextStyle(
+                                              fontSize: 15,fontWeight: FontWeight.bold,color: Colors.blueAccent
+                                            ),),
+                                          )
+                                        ],
+                                      ),
+                                    ); /*Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 5),
+                                      child: Material(
+                                        elevation: 5,
+                                        child: ListTile(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10)),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                serviceList.title,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ],
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(" ${serviceList.content}",
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.bold)),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                  "Created at: ${DateFormat.yMMMMd().format(DateTime.parse(serviceList.createdAt.toString()))}",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey,
+                                                      fontWeight: FontWeight.bold)),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                  "Updated at: ${DateFormat.yMMMMd().format(DateTime.parse(serviceList.updatedAt.toString()))}",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey,
+                                                      fontWeight: FontWeight.bold)),
+                                            ],
+                                          ),
+                                          trailing: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "₹ ${serviceList.price}",
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontStyle: FontStyle.italic),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  if (serviceList.status == "0" ||
+                                                      serviceList.status == 0) {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "You already purchased this serivce");
+                                                  } else {
+                                                    setState(() {
+                                                      serviceId = serviceList.sId;
+                                                      temp_amount =
+                                                          int.parse(serviceList.price);
+                                                    });
+                                                    razorPayPayment(
+                                                        amount: int.parse(
+                                                            serviceList.price),
+                                                        description:
+                                                            serviceList.content,
+                                                        name: serviceList.title);
+                                                  }
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10, vertical: 5),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(15),
+                                                      color: Colors.blue),
+                                                  child: const Text(
+                                                    "Pay Now",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    );*/
+                                  },
                                 ),
-                              ),
-                            );
-                          },
-                        )
+                            ],
+                          ),
+                        ),
+                      )
                       : const Center(
                           heightFactor: 10, child: Text("No data found!!"))
                   : const ShimmerWidget()

@@ -152,8 +152,8 @@ class _AppTabMenuState extends State<AppTabMenu> {
                             )
                           ]),
                       child: Container(
-                        // color: colorList[index],
                         decoration: BoxDecoration(
+                          color: colorList[index],
                           borderRadius: BorderRadius.circular(5),
                         ),
                         alignment: Alignment.center,
@@ -169,7 +169,7 @@ class _AppTabMenuState extends State<AppTabMenu> {
                                           ? Icons.upload_file_sharp
                                           : Icons.person,
                               size: 40,
-                              color: colorList[index],
+                             // color: colorList[index],
                             ),
                             Text(
                               widget.menuItemsList[index],
