@@ -87,7 +87,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor: Color(0xffFF9400),
         title: Text("Upload Document"),
       ),
       body: SingleChildScrollView(

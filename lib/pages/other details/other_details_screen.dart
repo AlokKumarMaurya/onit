@@ -38,6 +38,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
 
   List<UserDatum> userData = [];
   bool isloading = false;
+
   getUserData() async {
     var userDataResponse = await HomeRepository().getUserDetails();
     if (userDataResponse != null) {
@@ -71,6 +72,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
     }
   }
 
+  ///////////////////////////////////////////////////
   @override
   onSave() async {
     bool allValid = true;
@@ -199,7 +201,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
       setState(() {
         get_user_other_data_model = userOtherDataResponse;
         if (get_user_other_data_model?.status == 1) {
-          userOtherData = get_user_other_data_model?.data ?? [];
+          userOtherData = get_user_other_data_model?.data.data ?? [];
         } else {
           Fluttertoast.showToast(msg: get_user_other_data_model!.message);
         }
@@ -208,22 +210,59 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
       // userOtherData.forEach((element) {onAdd(userOtherData);});
       if (userOtherData != null) {
         for (int i = 0; i < userOtherData.length; i++) {
+        if(userOtherData[i].type=="1"){
           onAdd(userOtherData[i].title, userOtherData[i].value ?? " ",
               userOtherData[i].isRequire == "1" ? true : false);
           keyData.add(userOtherData[i].typeId);
           valueData.add(userOtherData[i].value);
+        }
         }
       }
     } else {}
   }
 
   void update() async {
+    bool allValid = true;
+    contactForms.forEach((element) {
+      if (element._nameController.text.isEmpty) {
+        allValid = false;
+      }
+    });
+
+
+    if(contactForms != null){
+      for (int i = 0; i < contactForms.length; i++) {
+        ContactFormItemWidget item = contactForms[i];
+// debugPrint("000000000000000000000");
+// debugPrint((item.contactModel.name !=null && item.contactModel.name.isNotEmpty && item.contactModel.name!="").toString());
+
+        if (item.contactModel.name != null &&
+            item.contactModel.name.isNotEmpty &&
+            item.contactModel.name != "") {
+          valueData[i] = item.contactModel.name;
+        }
+        // debugPrint(item.contactModel.name.toString());
+        // debugPrint("Number: ${item.contactModel.number}");
+        // debugPrint("Email: ${item.contactModel.email}");
+      }
+    }
+
+
     Get.defaultDialog(
         barrierDismissible: false,
         title: "",
         content: const CircularProgressIndicator());
-    var res = await ApiClient()
-        .UpdateUserProfile(_name.text, _email.text, _phone.text);
+    var res = await ApiClient().UpdateUserProfile(
+        currentAddress: _currentAddress.text,
+        email: _email.text,
+        fatherName: _fatherName.text,
+        matherName: _motherName.text,
+        name: _name.text,
+        permanetAddress: _permanentAddress.text,
+        phone: _phone.text,
+    data:valueData ,
+      value:keyData ,
+    );
     if (res != null) {
       Get.back();
     }
@@ -240,6 +279,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xffFF9400),
         automaticallyImplyLeading: true,
         title: const Text("Onit"),
         centerTitle: true,
@@ -329,7 +369,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
                                     height: 10,
                                   ),
                                   textFormField(
-                                    readonly: true,
+                                    readonly: false,
                                     cotroller: _fatherName,
                                     hintText: _fatherName.text != ""
                                         ? "${userData[0].fatherName ?? "Father Name"}"
@@ -347,7 +387,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
                                     height: 10,
                                   ),
                                   textFormField(
-                                    readonly: true,
+                                    readonly: false,
                                     cotroller: _motherName,
                                     hintText: _motherName.text != ""
                                         ? "${userData[0].motherName ?? "Mother name"}"
@@ -365,7 +405,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
                                     height: 10,
                                   ),
                                   textFormField(
-                                    readonly: true,
+                                    readonly: false,
                                     cotroller: _permanentAddress,
                                     hintText: _permanentAddress.text != ""
                                         ? "${userData[0].permanentAddress ?? "Permanent Address"}"
@@ -386,7 +426,7 @@ class _OtherDetailsScreenState extends ConsumerState<OtherDetailsScreen> {
                                     height: 10,
                                   ),
                                   textFormField(
-                                    readonly: true,
+                                    readonly: false,
                                     cotroller: _currentAddress,
                                     hintText: _currentAddress.text != ""
                                         ? "${userData[0].currentAddress ?? "Current Address"}"
@@ -624,19 +664,21 @@ class ContactFormItemWidget extends StatefulWidget {
   final state = _ContactFormItemWidgetState();
   final title;
   final initialText;
+
   @override
   State<StatefulWidget> createState() {
     return state;
   }
 
   TextEditingController _nameController = TextEditingController();
-  // TextEditingController _contactController = TextEditingController();
-  // TextEditingController _emailController = TextEditingController();
-  // TextEditingController _addressController = TextEditingController();
+// TextEditingController _contactController = TextEditingController();
+// TextEditingController _emailController = TextEditingController();
+// TextEditingController _addressController = TextEditingController();
 }
 
 class _ContactFormItemWidgetState extends State<ContactFormItemWidget> {
   final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Material(

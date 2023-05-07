@@ -45,7 +45,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor: Color(0xffFF9400),
         automaticallyImplyLeading: true,
         title: const Text("Onit"),
         centerTitle: true,

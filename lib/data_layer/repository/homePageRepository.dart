@@ -41,7 +41,7 @@ class HomeRepository {
 
     try {
       Map<String, String>? mapData = {"profile_hash": profileHash};
-      // print("applied Service Payload:==> $mapData");
+   print("applied Service Payload:==> $mapData");
       var response =
           await http.post(Uri.parse(OnitUrl.appliedService), body: mapData);
       print("applied Service Response:==>  ${response.body}");
@@ -97,8 +97,8 @@ class HomeRepository {
     String profileHash = AppPreference().profileHash;
     print(profileHash);
     Map mapData = {"profile_hash": profileHash}; //"990665454534fsgh4d4h6edt4"
-    try {
-      // print("get Config Payload:==> $mapData");
+
+      print("getUserOtherDetailsPayload $mapData");
       var response =
           await http.post(Uri.parse(OnitUrl.getUserOther), body: mapData);
       print("get User Other Details Response:==>  ${OnitUrl.getUserOther}");
@@ -106,10 +106,7 @@ class HomeRepository {
       if (response.statusCode == 200) {
         return GetUserOtherModel.fromJson(jsonDecode(response.body));
       }
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      print(e);
-    }
+
     return null;
   }
 

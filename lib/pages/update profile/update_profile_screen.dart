@@ -244,7 +244,7 @@ bool isloading=false;
                         //////// HERE
                       ),
                       onPressed: () {
-                        update();
+                       // update();
                       },
                       child: Text("Update")),
                 ),
@@ -259,7 +259,7 @@ bool isloading=false;
     );
   }
 
-  void update() async{
+/*  void update() async{
     Get.defaultDialog(
       barrierDismissible: false,
       title: "",
@@ -269,5 +269,5 @@ bool isloading=false;
    if(res !=null){
      Get.back();
    }
-  }
+  }*/
 }

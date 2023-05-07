@@ -124,6 +124,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xffFF9400),
         title: const Text("Onit"),
         centerTitle: true,
       ),
@@ -145,72 +146,113 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                       ? SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                         child: SizedBox(
-                          width: 450,
+                         // height: 1000,
+                          width: 560,
                           child: Column(
                             children: [
                               Container(
-                                height: 50,
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black)),
+                                  border: Border.all(color: Colors.black)
+                                ),
                                 child: Row(
                                   children: [
-                                    SizedBox(width: 30,child: Text("  S NO.  ",style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                    ),)),
+                                    const SizedBox(
+                                        width: 50,
+                                        child:
+                                        Center(child: Text("S No.",style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16
+                                        ),))),
                                     Container(
+                                      height: 50,
                                       width: 100,
-                                      height: 50,
                                       alignment: Alignment.center,
-                                      decoration:const BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           border: Border(
-                                              left:
-                                              BorderSide(color: Colors.black),
-                                              right: BorderSide(
-                                                  color: Colors.black))),
-                                      child: Text("Form",style: TextStyle(fontWeight: FontWeight.bold),),
+                                            left: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                            right: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                          )),
+                                      child: const Text("Form",style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16
+                                      ),),
                                     ),
-                                    SizedBox(width: 100,child: Center(child: Text("Date",style: TextStyle(fontWeight: FontWeight.bold),))),
+                                    const SizedBox(
+                                        width: 105,
+                                        child: Center(
+                                            child: Text("Date",style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 16
+                                            ),))),
                                     Container(
+                                      height: 50,
+                                      width: 65,
+                                      alignment: Alignment.center,
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                            left: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                            right: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                          )),
+                                      child: const Text("Form Fee",textAlign: TextAlign.center,style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16
+                                      ),),
+                                    ),
+                                    const SizedBox(
+                                        width: 80,
+                                        child: Center(
+                                            child: Text(
+                                                "Service Charge",textAlign: TextAlign.center,style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 16
+                                            ),))),
+                                    Container(
+                                      height: 50,
                                       width: 60,
-                                      height: 50,
                                       alignment: Alignment.center,
-                                      decoration:const BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           border: Border(
-                                              left:
-                                              BorderSide(color: Colors.black),
-                                              right: BorderSide(
-                                                  color: Colors.black))),
-                                      child: Text("Form Fee",textAlign: TextAlign.center,style: TextStyle(
-                                        fontWeight: FontWeight.bold
+                                            left: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                            right: BorderSide(
+                                              color: Colors.black,
+                                            ),
+                                          )),
+                                      child: const Text(
+                                          "Total",style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 16
                                       ),),
                                     ),
-                                    SizedBox(width: 60,child: Center(child: Text("Service charge",textAlign: TextAlign.center,style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                    ),))),
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      alignment: Alignment.center,
-                                      decoration:const BoxDecoration(
-                                          border: Border(
-                                              left:
-                                              BorderSide(color: Colors.black),
-                                              right: BorderSide(
-                                                  color: Colors.black))),
-                                      child: Text("Total",style: TextStyle(
-                                        fontWeight: FontWeight.bold
-                                      ),),
-                                    ),
-                                    InkWell(
-                                      child: Text(" ",style: TextStyle(
-                                          fontSize: 15,fontWeight: FontWeight.bold,color: Colors.blueAccent
-                                      ),),
-                                    )
+                                    const InkWell(
+                                        child:Center(
+                                          child: SizedBox(
+                                              width: 70,
+                                              child: Center(
+                                                  child: Text(
+                                                    " ",style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.blueAccent
+                                                  ),))),
+                                        )),
                                   ],
                                 ),
                               ),
-
-
                               ListView.builder(
                                   itemCount: serviceData.length,
                                   shrinkWrap: true,
@@ -218,77 +260,106 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                   itemBuilder: (context, index) {
                                     var serviceList = serviceData[index];
                                     return Container(
-                                      height: 35,
                                       decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black)),
+                                          border: Border.all(
+                                        color: Colors.black,
+                                      )),
                                       child: Row(
                                         children: [
-                                          SizedBox(width: 30,child: Text("  ${index + 1}  ")),
+                                          SizedBox(
+                                              width: 50,
+                                              child:
+                                                  Center(child: Text("${index + 1}"))),
                                           Container(
-                                            width: 100,
                                             height: 35,
+                                            width: 100,
                                             alignment: Alignment.center,
-                                            decoration:const BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 border: Border(
-                                                    left:
-                                                        BorderSide(color: Colors.black),
-                                                    right: BorderSide(
-                                                        color: Colors.black))),
+                                              left: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                              right: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                            )),
                                             child: Text(serviceList.title),
                                           ),
-                                          SizedBox(width: 100,child: Center(child: Text(DateFormat("yyyy-MM-dd").format(serviceList.fromDate)))),
+                                          SizedBox(
+                                              width: 105,
+                                              child: Center(
+                                                  child: Text(DateFormat.yMMMMd()
+                                                      .format(serviceList.fromDate)))),
                                           Container(
-                                            width: 60,
                                             height: 35,
+                                            width: 65,
                                             alignment: Alignment.center,
-                                            decoration:const BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 border: Border(
-                                                    left:
-                                                    BorderSide(color: Colors.black),
-                                                    right: BorderSide(
-                                                        color: Colors.black))),
-                                            child: Text("₹"+serviceList.price),
+                                              left: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                              right: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                            )),
+                                            child: Text("₹${serviceList.price}"),
                                           ),
-                                          SizedBox(width: 60,child: Center(child: Text("₹"+service_model!.serviceCharge))),
+                                          SizedBox(
+                                              width: 80,
+                                              child: Center(
+                                                  child: Text(
+                                                      "₹${service_model!.serviceCharge}"))),
                                           Container(
-                                            width: 50,
                                             height: 35,
-                                            decoration:const BoxDecoration(
+                                            width: 60,
+                                            alignment: Alignment.center,
+                                            decoration: const BoxDecoration(
                                                 border: Border(
-                                                    left:
-                                                    BorderSide(color: Colors.black),
-                                                    right: BorderSide(
-                                                        color: Colors.black))),
-                                            child: Text("₹"+(int.parse(service_model!.serviceCharge)+int.parse(serviceList.price)).toString()),
+                                              left: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                              right: BorderSide(
+                                                color: Colors.black,
+                                              ),
+                                            )),
+                                            child: Text(
+                                                "₹${int.parse(serviceList.price) + int.parse(service_model!.serviceCharge)}"),
                                           ),
                                           InkWell(
-                                            onTap: () async {
-                                              if (serviceList.status == "0" ||
-                                                  serviceList.status == 0) {
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                    "You already purchased this serivce");
-                                              } else {
-                                                setState(() {
-                                                  serviceId = serviceList.sId;
-                                                  temp_amount =
-                                                      int.parse(serviceList.price);
-                                                });
-                                                razorPayPayment(
-                                                    amount: int.parse(
-                                                        serviceList.price),
-                                                    description:
-                                                    serviceList.content,
-                                                    name: serviceList.title);
-                                              }
-                                            },
-                                            child: Text("Pay",style: TextStyle(
-                                              fontSize: 15,fontWeight: FontWeight.bold,color: Colors.blueAccent
-                                            ),),
-                                          )
+                                              onTap: () {
+                                                if (serviceList.status == "0" ||
+                                                    serviceList.status == 0) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "You already purchased this serivce");
+                                                } else {
+                                                  setState(() {
+                                                    serviceId = serviceList.sId;
+                                                    temp_amount =
+                                                        int.parse(serviceList.price);
+                                                  });
+                                                  razorPayPayment(
+                                                      amount:
+                                                          int.parse(serviceList.price),
+                                                      description: serviceList.content,
+                                                      name: serviceList.title);
+                                                }
+                                              },
+                                              child:const Center(
+                                                child: SizedBox(
+                                                    width: 70,
+                                                    child: Center(
+                                                        child: Text(
+                                                            "Pay Now",style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.blueAccent
+                                                        ),))),
+                                              )),
                                         ],
                                       ),
-                                    ); /*Padding(
+                                    );
+                                    /*Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0, vertical: 5),
                                       child: Material(
@@ -382,7 +453,7 @@ class _BuyServiceState extends ConsumerState<BuyService> {
                                                           BorderRadius.circular(15),
                                                       color: Colors.blue),
                                                   child: const Text(
-                                                    "Pay Now",
+                                                    "saasaPay Now",
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 12),

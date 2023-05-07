@@ -67,7 +67,7 @@ appGeneratedRoutes(RouteSettings settings) {
               RouteSettings(name: settings.name, arguments: settings.arguments),
           builder: (BuildContext context) => AppTabMenu(
                 menuItemsList: const [
-                  "My Orders",
+                  "Service Asked",
 
                   "Update Profile",
                   "Upload Doc",

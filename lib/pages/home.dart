@@ -29,10 +29,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   int selectedIndex = 0;
   bool services_loader = false;
 
-  GetConfigModel? get_config_model;
+
 
   List<ConfigList> configDataList = [];
-
+  GetConfigModel? get_config_model;
   getConfigs() async {
     setState(() {
       services_loader = true;
@@ -73,9 +73,9 @@ class _HomePageState extends ConsumerState<HomePage> {
         return exit(0);
       },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(backgroundColor: Color(0xffFF9400),
           automaticallyImplyLeading: false,
-          title: Text("Onit"),
+          title: const Text("Onit"),
           centerTitle: true,
           actions: [
             IconButton(

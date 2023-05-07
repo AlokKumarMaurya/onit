@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../api config/api_client.dart';
+import '../data_layer/repository/homePageRepository.dart';
 import '../model/bannerModal.dart';
+import '../model/get_config_model.dart';
 import '../pages/Upload Doc/upload_doc_screen.dart';
 import '../pages/buy service/buyServiceCombinedView.dart';
 import '../pages/orders/orders_Screen.dart';
@@ -23,7 +25,7 @@ class AppTabMenu extends StatefulWidget {
   final EdgeInsets? margin, padding;
 
   AppTabMenu(
-      {required this.menuItemsList,
+      {super.key, required this.menuItemsList,
       required this.onItemClick,
       required this.selectedIndex,
       this.fontSize = 16,
@@ -41,16 +43,46 @@ class _AppTabMenuState extends State<AppTabMenu> {
     Colors.indigoAccent,
     Colors.red
   ];
-
+  final List<Color> backgroundColorList = [
+    const Color(0xffffb520),
+    const Color(0xff3ea1be),
+    const Color(0xffC6BE2F),
+    const Color(0xffd34269)
+  ];
   RxList<BannerModalDatum> bannerModalDatum =
       List<BannerModalDatum>.empty(growable: true).obs;
 
   @override
   void initState() {
+    getConfigs();
     getBannerList();
     // TODO: implement initState
     super.initState();
   }
+
+  List<ConfigList> configDataList = [];
+  GetConfigModel? get_config_model;
+  getConfigs() async {
+    var configResponse = await HomeRepository().getConfig();
+    if (configResponse != null) {
+      setState(() {
+        get_config_model = configResponse;
+        if (get_config_model?.status == 1) {
+          configDataList = get_config_model?.data ?? [];
+          AppPreference().saveRazorPayKey(configDataList[0].razorpayKey ?? "");
+        } else {
+          Fluttertoast.showToast(msg: get_config_model!.message);
+        }
+       // services_loader = false;
+      });
+    } else {
+      setState(() {
+        //services_loader = false;
+      });
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +91,8 @@ class _AppTabMenuState extends State<AppTabMenu> {
         openExitBottomSheet();
         return false;
       },
-      child: Scaffold(
-        appBar: AppBar(
+      child: Scaffold(backgroundColor: const Color(0xff073765),
+        appBar: AppBar(backgroundColor: const Color(0xffFF9400),elevation: 0,
           automaticallyImplyLeading: false,
           title: const Text("Onit"),
           centerTitle: true,
@@ -81,16 +113,18 @@ class _AppTabMenuState extends State<AppTabMenu> {
             children: [
               Obx(() => bannerModalDatum.length > 0
                   ? Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: CarouselSlider.builder(
+
                         itemCount: bannerModalDatum.length,
                         itemBuilder: (BuildContext context, int index,
                                 int pageViewIndex) =>
                             Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15) ,    color: const Color(0xff073765),),
                           width: Get.width,
-                          color: Colors.pink,
+
                           child: Image.network(
-                            bannerModalDatum[index].photo,
+                           "http://test.devarshidevaldhaam.com/upload/slider/${bannerModalDatum[index].photo}",
                             errorBuilder: (context, error, stackTrace) =>
                                 Image.asset(
                               "assets/noImage.png",
@@ -98,126 +132,73 @@ class _AppTabMenuState extends State<AppTabMenu> {
                             ),
                           ),
                         ),
-                        options: CarouselOptions(autoPlay: true, height: 150),
+                        options: CarouselOptions(autoPlay: true, height: 150,
+                        ),
                       ),
                     )
                   : const SizedBox()),
               BuyServiceCombineView(),
-              Container(
-                height: 100,
-                width: Get.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  // border: Border.all(color: AppColors.borderShade3)
+              GridView.builder(padding: const EdgeInsets.symmetric(horizontal: 5),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.menuItemsList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 1,
+                  mainAxisSpacing: 1,
+childAspectRatio: 0.85
                 ),
-                margin: widget.margin ??
-                    const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                // padding:padding?? EdgeInsets.all(20),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.menuItemsList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 1,
-                    mainAxisSpacing: 1,
-                    childAspectRatio: 1.2,
-                  ),
-                  itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      if (index == 0) {
-                        Get.to(() => const OrderScreen());
-                      } else if (index == 1) {
-                        Get.to(() => const OtherDetailsScreen());
-                      } else if (index == 2) {
-                        Get.to(() => const UploadDocScreen());
-                      }
-                      widget.onItemClick(index);
-                    },
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    if (index == 0) {
+                      Get.to(() => const OrderScreen());
+                    } else if (index == 1) {
+                      Get.to(() => const OtherDetailsScreen());
+                    } else if (index == 2) {
+                      Get.to(() => const UploadDocScreen());
+                    }
+                    widget.onItemClick(index);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 5, horizontal: 3),
+                  //  padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+
+                        color:backgroundColorList[index],
+                     ),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 3),
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              // offset: const Offset(2, 2),
-                              spreadRadius: 5,
-                              blurRadius: 12,
-                              color: /*colorList[index]
-                                    .withOpacity(0.3) */
-                                  Colors.grey.shade200,
-                            )
-                          ]),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: colorList[index],
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        alignment: Alignment.center,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              index == 0
-                                  ? Icons.miscellaneous_services
-                                  : index == 1
-                                      ? Icons.note_alt_rounded
-                                      : index == 3
-                                          ? Icons.upload_file_sharp
-                                          : Icons.person,
-                              size: 40,
-                             // color: colorList[index],
-                            ),
-                            Text(
-                              widget.menuItemsList[index],
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                          ],
-                        ),
+                      // color: colorList[index],
+                      decoration: const BoxDecoration(),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            index == 0
+                                ? Icons.miscellaneous_services
+                                : index == 1
+                                    ? Icons.note_alt_rounded
+                                    : index == 3
+                                        ? Icons.person
+                                        : Icons.upload_file_outlined,
+                            size: 40,
+                            color:Colors.white,
+                          ),
+                          const SizedBox(height: 10,),
+                          Text(
+                            widget.menuItemsList[index],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ) /*Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      HorizontalScrollView(
-                        children: List.generate(menuItemsList.length, (index) {
-                          var menuItem = menuItemsList[index];
-                          return GestureDetector(
-                            onTap:() => onItemClick(index),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: selectedIndex == index
-                                            ? Colors.blue
-                                            : Colors.white,
-                                        width: 5)),
-                              ),
-                              padding: const EdgeInsets.only(top: 20,bottom: 10,left: 10,right: 10),
-                              child: Text(
-                                menuItem,
-                               //
-                                style: TextStyle(
-
-                                    fontSize: fontSize,color: selectedIndex==index?Colors.blue:Colors.black
-                                ),
-
-
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ])*/
-                ,
+                ),
               ),
             ],
           ),
@@ -229,12 +210,12 @@ class _AppTabMenuState extends State<AppTabMenu> {
   void openDialog() {
     Get.bottomSheet(
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         ),
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12), topRight: Radius.circular(12))),
@@ -249,13 +230,13 @@ class _AppTabMenuState extends State<AppTabMenu> {
                     Get.back();
                     changePasswordSheet();
                   },
-                  child: Text("Change Password")),
+                  child: const Text("Change Password")),
               TextButton(
                   onPressed: () {
                     Get.back();
                     logoutAlertBox();
                   },
-                  child: Text("Logout"))
+                  child: const Text("Logout"))
             ],
           ),
         ));
@@ -265,12 +246,12 @@ class _AppTabMenuState extends State<AppTabMenu> {
     var pass;
     Get.bottomSheet(
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         ),
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12), topRight: Radius.circular(12))),
@@ -280,7 +261,7 @@ class _AppTabMenuState extends State<AppTabMenu> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
@@ -290,15 +271,15 @@ class _AppTabMenuState extends State<AppTabMenu> {
                       color: Colors.grey.shade200),
                   width: MediaQuery.of(Get.context!).size.width,
                   alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(15.0),
                     child: Icon(Icons.key_off, size: 60),
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                   "Change password",
                   style: TextStyle(
@@ -307,15 +288,15 @@ class _AppTabMenuState extends State<AppTabMenu> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
                 width: MediaQuery.of(Get.context!).size.width,
                 height: 40,
                 alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: Colors.black)),
@@ -327,11 +308,11 @@ class _AppTabMenuState extends State<AppTabMenu> {
                   },
                   obscureText: true,
                   obscuringCharacter: "#",
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: "Your Password", border: InputBorder.none),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               InkWell(
@@ -343,15 +324,15 @@ class _AppTabMenuState extends State<AppTabMenu> {
                   width: MediaQuery.of(Get.context!).size.width,
                   height: 35,
                   alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 2)),
-                  child: Text(""
+                  child: const Text(""
                       "Change password"),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
             ],
@@ -363,7 +344,7 @@ class _AppTabMenuState extends State<AppTabMenu> {
     debugPrint(pass.toString());
     debugPrint("pass.toString()");
     if (pass.isNotEmpty) {
-      Get.dialog(Center(child: CircularProgressIndicator()));
+      Get.dialog(const Center(child: CircularProgressIndicator()));
       var response = await ApiClient().changePassWord(pass);
       if (response != null) {
         // Get.back();
@@ -381,26 +362,26 @@ class _AppTabMenuState extends State<AppTabMenu> {
   void logoutAlertBox() {
     Get.defaultDialog(
         title: "Logout",
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
             fontSize: 22, color: Colors.black87, fontWeight: FontWeight.w500),
         middleText: "Are you sure that you want to logout from Onit ",
         textCancel: "Cancel",
         textConfirm: "Logout",
-        middleTextStyle: TextStyle(
+        middleTextStyle: const TextStyle(
             fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w400),
         cancel: InkWell(
           onTap: () => Navigator.pop(Get.context!),
           child: Container(
             height: 50,
             alignment: Alignment.center,
-            child: Text(
+            width: MediaQuery.of(Get.context!).size.width / 3.5,
+            child: const Text(
               "Cancel",
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.black87,
                   fontWeight: FontWeight.w500),
             ),
-            width: MediaQuery.of(Get.context!).size.width / 3.5,
           ),
         ),
         confirm: InkWell(
@@ -414,14 +395,14 @@ class _AppTabMenuState extends State<AppTabMenu> {
           child: Container(
             height: 50,
             alignment: Alignment.center,
-            child: Text(
+            width: MediaQuery.of(Get.context!).size.width / 3.5,
+            child: const Text(
               "Logout",
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.black87,
                   fontWeight: FontWeight.w500),
             ),
-            width: MediaQuery.of(Get.context!).size.width / 3.5,
           ),
         ),
         onCancel: () {
@@ -470,7 +451,7 @@ class _AppTabMenuState extends State<AppTabMenu> {
           const SizedBox(
             height: 25,
           ),
-          Text(
+          const Text(
             "Are you sure that you want to exit",
             style: TextStyle(
                 fontWeight: FontWeight.normal,
@@ -486,14 +467,14 @@ class _AppTabMenuState extends State<AppTabMenu> {
                 child: InkWell(
                   onTap: () => Navigator.pop(Get.context!),
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Cancel",
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
@@ -504,14 +485,14 @@ class _AppTabMenuState extends State<AppTabMenu> {
                 child: InkWell(
                   onTap: () => exit(0),
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Exit",
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),

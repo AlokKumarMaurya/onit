@@ -12,16 +12,29 @@ import '../utilities/app_prefereces.dart';
 import 'network_utility.dart';
 
 class ApiClient extends GetConnect {
-  UpdateUserProfile(String name, String email, String phone) async {
+  UpdateUserProfile({required String name,required String email,required String phone,required String fatherName,required String matherName,required String permanetAddress,required String currentAddress,required List data,required List value}) async {
     var api = Uri.parse(OnitUrl.updateProfile);
     await NetworkUtility.checkNetworkStatus();
+    String dataValue = "";
+    String keyValye = '';
+    for (int i = 0; i < data.length; i++) {
+      dataValue = data[i] + "," + dataValue;
+      keyValye = value[i] + "," + keyValye;
+    }
     String profileHash = AppPreference().profileHash;
     var body = {
       "name": name,
       'email': email,
       "phone": phone,
-      "profile_hash": profileHash
+      "profile_hash": profileHash,
+      "father_name":fatherName,
+      "mother_name":matherName,
+      "permanent_address":permanetAddress,
+      "current_address":currentAddress,  ///add these key,
+      "type_id[]":dataValue,//filed name
+      "value[]":keyValye,//field value
     };
+    debugPrint("this is the update profile body $body");
     try {
       var response = await http.post(api, body: body);
       if (response.statusCode == 200) {

@@ -34,7 +34,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
   List<DocType> docTypeData = [];
   File? file;
   RxString filesname = "".obs;
-  RxList<Datum> uploadedDocList = RxList<Datum>.empty(growable: true);
+  RxList<UploadDocDatum> uploadedDocList = RxList<UploadDocDatum>.empty(growable: true);
   var temp;
   getDocumentType() async {
     var userDocTypeResponse = await HomeRepository().getDocType();
@@ -75,7 +75,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor: Color(0xffFF9400),
         automaticallyImplyLeading: true,
         title: const Text("Onit"),
         centerTitle: true,
@@ -103,7 +103,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            var doctDAtaList = docTypeData[index];
+                           // var doctDAtaList = docTypeData[index];
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8.0, vertical: 5),
@@ -132,7 +132,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                                       ),
                                       Text(
                                           "Uploaded on : ${uploadedDocList.value[index].createdAt.toString().padLeft(10)}"),
-                                      Row(
+                                    /*  Row(
                                         children: [
                                           GestureDetector(
                                             onTap: () async {
@@ -156,7 +156,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      ),*/
                                     ],
                                   ),
                                   trailing: Column(
@@ -202,7 +202,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
                           },
                         )
                       : Container(
-                          child: Center(
+                          child: const Center(
                               heightFactor: 10, child: Text("No data found!!")),
                         )
                   : const ShimmerWidget()),
@@ -460,7 +460,7 @@ class _UploadDocScreenState extends ConsumerState<UploadDocScreen> {
       setState(() {
         uploadedDocList.value = modal.data;
       });
-      uploadedDocList.value = modal.data;
+      //uploadedDocList.value = modal.data;
     }
   }
 
